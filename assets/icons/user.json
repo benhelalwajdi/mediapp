@@ -1,0 +1,34 @@
+[
+  {
+  "_id" : "1",
+  "name": "user",
+  "email": "user@user.com",
+  "password": "pass",
+  "username": "user",
+  "role": "pat",
+  "speciality": "",
+  "address": "52 city nassime",
+  "tel": "00216 23121414",
+  "monmed": "2",
+  "type": ["INFECTION"],
+  "medicaments":["H"],
+  "code": "7486332443",
+  "evaluation": "1"
+  },
+  {
+    "_id" : "2",
+    "name": "med",
+    "email": "med@user.com",
+    "password": "pass",
+    "username": "user",
+    "role": "med",
+    "speciality": "generale",
+    "address": "53 city nassime",
+    "tel": "00216 24121414",
+    "monmed": "2",
+    "type": [""],
+    "medicaments":[""],
+    "code": "",
+    "evaluation": ""
+  }
+]

@@ -103,7 +103,7 @@ Widget backButton(context) {
             padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
             child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
           ),
-          Text('Back',
+          Text('Retour',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500))
         ],
       ),
@@ -141,52 +141,13 @@ Widget emailPasswordWidget(TextEditingController userController,
     TextEditingController passwordController) {
   return Column(
     children: <Widget>[
-      entryField("Email id", userController),
-      entryField("Password", passwordController, isPassword: true),
+      entryField("Username", userController),
+      entryField("Mots de passe", passwordController, isPassword: true),
     ],
   );
 }
-
-/*
-_makePostRequest( TextEditingController userController, TextEditingController passwordController) async {
-  // set up POST request arguments
-  String url = 'http://127.0.0.1:3000/api/authenticate';
-  Map<String, String> headers = {"Content-type": "application/json"};
-  String json = '{"username": "'+userController.text.toString()+'", "password": "'+passwordController.text.toString()+'"}';
-  // make POST request
-  http.Response response = await http.post(url, headers: headers, body: json);
-  // check the status code for the result
-  int statusCode = response.statusCode;
-  print(statusCode);
-
-  // this API passes back the id of the new item added to the body
-  String body = response.body;
-  print(body);
-  // {
-  //   "title": "Hello",
-  //   "body": "body text",
-  //   "userId": 1,
-  //   "id": 101
-  // }
-}*/
-
 Widget submitButton(context, TextEditingController userController,
     TextEditingController passwordController) {
- /*var bol ;
-  try {
-    if(Constants.user == null){
-      bol= false ;
-    }else{
-    print(Constants.user["name"].toString());
-    bol = true;}
-  } on Exception catch (_) {
-    bol = false;
-    print('never reached');
-  }
-  if(bol) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DetailPPage()));
-  }else{*/
   return InkWell(
       onTap: () {
         //Navigator.pop(context);
@@ -254,11 +215,8 @@ Widget submitButton(context, TextEditingController userController,
                 print(false);
               }
             });
-        //_makePostRequest(user_controller,password_controller);
         print(userController.text.toString());
         print(passwordController.text.toString());
-        /*
-        );*/
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -298,15 +256,11 @@ Widget createAccountLabel(context) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            'Don\'t have an account ?',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
-          ),
           SizedBox(
             width: 10,
           ),
           Text(
-            'Register',
+            'Registre',
             style: TextStyle(
                 color: Constants.darkBlue,
                 fontSize: 13,

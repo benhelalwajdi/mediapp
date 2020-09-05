@@ -51,9 +51,10 @@ class Rates {
 class RatesViewModel {
   // ignore: non_constant_identifier_names
   static List<Rates> Listrates = [];
+  static String idPat ;
   static Future loadPlayers() async {
     var url =
-        "http://"+Constants.url+":"+Constants.port+"/api/rates/ratesByUser/5f48edfd0398db4aac513485";
+        "http://"+Constants.url+":"+Constants.port+"/api/rates/ratesByUser/"+idPat.toString();
     http.get(url, headers: {"Content-Type": "application/json"}).then(
         (http.Response response) {
       print("Response status: ${response.statusCode}");
@@ -73,6 +74,7 @@ class RatesViewModel {
         print(listRates[i].toString());
         Rates rates2 = new Rates.fromJson(listRates[i]);
         Listrates.add(rates2);
+        print(rates2.value);
       }
     });
   }

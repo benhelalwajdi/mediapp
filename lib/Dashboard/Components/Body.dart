@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:calendar_vertical_scroll/calendar_vertical_scroll.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mediapp/Dashboard/Components/product_card.dart';
+import 'package:mediapp/screens/detail_screen.dart';
 import 'package:mediapp/screens/newUser_screen.dart';
 import 'package:mediapp/utils/const.dart';
+import 'package:mediapp/utils/user.dart';
 import '../Dashboard.dart';
 import 'Background.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +27,12 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
   final prenom_Controller = TextEditingController();
   final nom_Controller = TextEditingController();
 
+
+  GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
+  AutoCompleteTextField searchTextField;
+  TextEditingController econtroller = new TextEditingController();
+
+
   @override
   void initState() {
     controller = AnimationController(vsync: this, duration: duration);
@@ -31,6 +40,8 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
     menuScaleAnimation = Tween<double>(begin: 0.5, end: 1).animate(controller);
     slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
         .animate(controller);
+
+    _loadData();
     super.initState();
   }
 
@@ -45,6 +56,9 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
     setState(() {
       build(context);
     });
+  }
+  void _loadData() async {
+    await UserViewModel.loadPlayers();
   }
 
   @override
@@ -100,112 +114,80 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      InkWell(
-                        child: Icon(Icons.menu, color: Colors.black),
-                        onTap: () {
-                          setState(() {
-                            if (isCollapsed)
-                              controller.forward();
-                            else
-                              controller.reverse();
-                            isCollapsed = !isCollapsed;
-                          });
-                        },
-                      ),
-                      Text(
-                        'Liste des patients',
-                        textScaleFactor: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black, fontSize: 8),
-                      ),
-                      IconButton(
-                          icon: new Icon(Icons.add, color: Colors.black),
-                          onPressed: () {
-                            showDialog(
-                                child: new Dialog(
-                                  child: new Column(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      TextField(
-                                          controller: nom_Controller,
-                                          decoration: InputDecoration(
-                                              hintText: "Nom :",
-                                              border: InputBorder.none,
-                                              fillColor: Color(0xfff3f3f4),
-                                              filled: true)),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      TextField(
-                                          controller: prenom_Controller,
-                                          decoration: InputDecoration(
-                                              hintText: "Prénom :",
-                                              border: InputBorder.none,
-                                              fillColor: Color(0xfff3f3f4),
-                                              filled: true)),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      RaisedButton(
-                                          onPressed: () async {
-                                            strDate = await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => CalendarChoose(
-                                                      Calendar.BIRTHDAY,
-                                                      currentDateFontColor: Colors.blue,
-                                                      currentDateBackgroundColor:
-                                                      Colors.amberAccent,
-                                                      selectionBackgroundColor: Colors.amber,
-                                                      selectionFontColor: Colors.green,
-                                                    )));
-                                            if (strDate == null) strDate = "";
-                                          },
-                                          child: Text("Birthday")),
-
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      new FlatButton(
-                                        child: new Text("Save"),
-                                        onPressed: () {
-                                          /*setState((){
-                                        this._text = _c.text;
-                                      });*/
-                                          print(prenom_Controller.text);
-                                          print(nom_Controller.text);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomeScreen(nom_Controller.text,prenom_Controller.text)),
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
+                    Column(children: <Widget>[
+                    Column(children: <Widget>[
+                      SizedBox(height: 20),
+                      backButton(context),
+                      //Positioned(top: 40, left: 0, child: backButton(context)),
+                      searchTextField = AutoCompleteTextField<User>(
+                          style: new TextStyle(color: Colors.black, fontSize: 16.0),
+                          decoration: new InputDecoration(
+                              fillColor: Colors.transparent,
+                              suffixIcon: Container(
+                                width: 55.0,
+                                height: 60.0,
+                              ),
+                              contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
+                              filled: true,
+                              hintText: 'Recherche Patient par Nom :',
+                              hintStyle: TextStyle(color: Colors.black)),
+                          itemSubmitted: (item) {
+                            print(item.id.toString());
+                            print(item.adress.toString());
+                            DateTime s = DateTime.parse(item.createdAt.toString());
+                            print (s.year.toString());
+                            setState(
+                                  () => searchTextField.textField.controller.text =
+                                  item.email,
+                            );
+                            print(item.id);
+                            if(item == null ){
+                              print(null);
+                            }else{
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => DetailPage(item)),
+                              );
+                            }
+                          },
+                          clearOnSubmit: false,
+                          key: key,
+                          suggestions: UserViewModel.user,
+                          itemBuilder: (context, item) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  item.email,
+                                  style: TextStyle(fontSize: 16.0),
                                 ),
-                                context: context);
-                          }
-                          ),
-                    ],
-                  ),
+                                Padding(padding: EdgeInsets.all(15.0)),
+                                Text(item.name.toString())
+                              ],
+                            );
+                          },
+                          itemSorter: (a, b) {
+                            return a.email.compareTo(b.email);
+                          },
+                          itemFilter: (item, query) {
+                            return item.email
+                                .toLowerCase()
+                                .startsWith(query.toLowerCase());
+                          }),
+                    ]),
+                  ]),
+
                   SizedBox(height: 5),
                   ListView.builder(
                       itemBuilder: (context, index) {
                         return ProductCard(
                           itemIndex: index,
+                          user: UserViewModel.user[index],
                           press: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen(nom_Controller.text, prenom_Controller.text)),
+                                  builder: (context) => DetailPage(UserViewModel.user[index])),
                             );
                           },
                         );

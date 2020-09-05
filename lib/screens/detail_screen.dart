@@ -19,7 +19,9 @@ bool showAvg = false;
 // ignore: must_be_immutable
 class DetailPage extends StatefulWidget {
   User item;
+
   DetailPage(this.item);
+
   @override
   DetailScreen createState() => DetailScreen(this.item);
 }
@@ -28,10 +30,13 @@ class DetailScreen extends State<DetailPage> {
   bool H = false;
   bool F = false;
   bool G = false;
+
   // ignore: non_constant_identifier_names
   bool HFC = false;
   User user;
   List<String> listType = [""];
+  var medicament = " ";
+  var medicaments = " ";
 
   void _loadData() async {
     await RatesViewModel.loadPlayers();
@@ -41,14 +46,23 @@ class DetailScreen extends State<DetailPage> {
   void initState() {
     _loadData();
     print(user.name.toString());
-    for (int i = 0 ; i< user.type.length ; i++){
-      if(i == 0){
+    for (int i = 0; i < user.type.length; i++) {
+      if (i == 0) {
         listType[i] = (user.type[i].toString());
-      }else{
-      print(user.type[i].toString());
-      listType.add(user.type[i].toString());
+      } else {
+        print(user.type[i].toString());
+        listType.add(user.type[i].toString());
       }
     }
+    for (int i = 0; i < user.type.length; i++) {
+      print(user.type.toString());
+      medicament = medicament + " " + user.type[i].toString();
+    }
+    for (int i = 0; i < user.medicaments.length; i++) {
+      print(user.medicaments.toString());
+      medicaments = medicaments + ", " + user.medicaments[i].toString();
+    }
+    RatesViewModel.idPat = user.id;
     super.initState();
   }
 
@@ -93,10 +107,13 @@ class DetailScreen extends State<DetailPage> {
                     SizedBox(
                       width: 34,
                       child: RawMaterialButton(
-                        materialTapTargetSize:
-                        MaterialTapTargetSize.shrinkWrap,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         onPressed: () {
-                          Navigator.pop(context);
+  /*                        for (int i = 0 ; i < 5 ; i++){
+                            RatesViewModel.Listrates[i].value = 0;
+                            RatesViewModel.Listrates[i].createdAt = user.createdAt;
+                          }
+*/                          Navigator.pop(context);
                         },
                         child: Icon(Icons.arrow_back_ios,
                             size: 15.0, color: Colors.white),
@@ -154,33 +171,41 @@ class DetailScreen extends State<DetailPage> {
                   borderRadius: new BorderRadius.circular(20.0),
                   child: Container(
                     padding: EdgeInsets.all(20.0),
-                    height: 210,
+                    height: 150,
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 20),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Date de consultation :"),//: 27/08/2020
-                            Text(DateTime.parse(user.createdAt).day.toString()+"/"+DateTime.parse(user.createdAt).month.toString()+"/"+DateTime.parse(user.createdAt).year.toString()),//: 27/08/2020
-                          ]
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Date de consultation :"), //: 27/08/2020
+                              Text(DateTime.parse(user.createdAt)
+                                      .day
+                                      .toString() +
+                                  "/" +
+                                  DateTime.parse(user.createdAt)
+                                      .month
+                                      .toString() +
+                                  "/" +
+                                  DateTime.parse(user.createdAt)
+                                      .year
+                                      .toString()), //: 27/08/2020
+                            ]),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Pathologie : "),//Infection
-                            Text("")//Infection
-                          ]
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Pathologie : "), //Infection
+                              Text(medicament) //Infection
+                            ]),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Prescription :"),// Lactose nigelle H"),"),
-                          ]
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Prescription : " + medicaments),
+                              // Lactose nigelle H"),"),
+                            ]),
                       ],
                     ),
                   ), // added
@@ -208,7 +233,8 @@ class DetailScreen extends State<DetailPage> {
                                       color: Colors.black),
                                 ),
                                 Row(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: <Widget>[],
@@ -221,8 +247,8 @@ class DetailScreen extends State<DetailPage> {
                               child: IconButton(
                                 icon: Icon(
                                   Icons.refresh,
-                                  color:
-                                  Colors.blue.withOpacity(showAvg ? 1.0 : 0.5),
+                                  color: Colors.blue
+                                      .withOpacity(showAvg ? 1.0 : 0.5),
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -324,7 +350,6 @@ LineChartData sampleData1(List<Rates> listrates) {
       bottomTitles: SideTitles(
         showTitles: true,
         reservedSize: 22,
-
         textStyle: const TextStyle(
           color: Color(0xff72719b),
           fontWeight: FontWeight.bold,
@@ -332,17 +357,17 @@ LineChartData sampleData1(List<Rates> listrates) {
         ),
         margin: 10,
         getTitles: (value) {
-          DateTime dt= DateTime.parse(listrates[0].createdAt.toString());
-          DateTime dt2= DateTime.parse(listrates[1].createdAt.toString());
+          DateTime dt = DateTime.parse(listrates[0].createdAt.toString());
+          DateTime dt2 = DateTime.parse(listrates[1].createdAt.toString());
           switch (value.toInt()) {
             case 3:
-              return dt.day.toString()+"/"+dt.month.toString();
+              return dt.day.toString() + "/" + dt.month.toString();
             case 6:
-              return dt2.day.toString()+"/"+dt2.month.toString();
+              return dt2.day.toString() + "/" + dt2.month.toString();
             case 9:
-              return dt2.day.toString()+"/"+dt2.month.toString();
+              return dt2.day.toString() + "/" + dt2.month.toString();
             case 12:
-              return dt2.day.toString()+"/"+dt2.month.toString();
+              return dt2.day.toString() + "/" + dt2.month.toString();
           }
           return '';
         },
@@ -391,7 +416,6 @@ LineChartData sampleData1(List<Rates> listrates) {
         ),
       ),
     ),
-
     lineBarsData: linesBarData1(listrates),
   );
 }
@@ -399,10 +423,11 @@ LineChartData sampleData1(List<Rates> listrates) {
 List<LineChartBarData> linesBarData1(listrates) {
   final LineChartBarData lineChartBarData1 = LineChartBarData(
     spots: [
-      FlSpot(3, double.parse(listrates[1].value.toString()+".0")),
-      FlSpot(6, double.parse(listrates[0].value.toString()+".0")),
-      FlSpot(9, double.parse(listrates[0].value.toString()+".0")),
-      FlSpot(12, double.parse(listrates[1].value.toString()+".0")),
+      FlSpot(3, double.parse(listrates[0].value.toString() + ".0")),
+      FlSpot(6, double.parse(listrates[1].value.toString() + ".0")),
+      FlSpot(9, double.parse(listrates[2].value.toString() + ".0")),
+      FlSpot(12, double.parse(listrates[3].value.toString() + ".0")),
+      FlSpot(14, double.parse(listrates[4].value.toString() + ".0")),
     ],
     isCurved: true,
     colors: [
@@ -465,82 +490,8 @@ List<LineChartBarData> linesBarData1(listrates) {
 
   return [
     lineChartBarData1,
-    //lineChartBarData2,
-    //lineChartBarData3,
   ];
 }
-
-/*List<LineChartBarData> linesBarData2() {
-  return [
-    LineChartBarData(
-      spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 4),
-        FlSpot(5, 1.8),
-        FlSpot(7, 5),
-        FlSpot(10, 2),
-        FlSpot(12, 2.2),
-        FlSpot(13, 1.8),
-      ],
-      isCurved: true,
-      curveSmoothness: 0,
-      colors: const [
-        Color(0x444af699),
-      ],
-      barWidth: 6,
-      isStrokeCapRound: true,
-      dotData: FlDotData(
-        show: false,
-      ),
-      belowBarData: BarAreaData(
-        show: false,
-      ),
-    ),
-    LineChartBarData(
-      spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 2.8),
-        FlSpot(7, 1.2),
-        FlSpot(10, 2.8),
-        FlSpot(12, 2.6),
-        FlSpot(13, 3.9),
-      ],
-      isCurved: false,
-      colors: const [
-        Color(0x99aa4cfc),
-      ],
-      barWidth: 4,
-      isStrokeCapRound: true,
-      dotData: FlDotData(
-        show: true,
-      ),
-      belowBarData: BarAreaData(show: true, colors: [
-        const Color(0x33aa4cfc),
-      ]),
-    ),
-    LineChartBarData(
-      spots: [
-        FlSpot(1, 3.8),
-        FlSpot(3, 1.9),
-        FlSpot(6, 5),
-        FlSpot(10, 3.3),
-        FlSpot(13, 4.5),
-      ],
-      isCurved: true,
-      curveSmoothness: 0,
-      colors: const [
-        Colors.black,
-      ],
-      barWidth: 2,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: true),
-      belowBarData: BarAreaData(
-        show: false,
-      ),
-    ),
-  ];
-}*/
-
 
 // bar Chart
 BarChartData barChartData(List<Rates> listrates) {
@@ -561,13 +512,43 @@ BarChartData barChartData(List<Rates> listrates) {
         margin: 10,
         rotateAngle: 0,
         getTitles: (double value) {
-          DateTime dt= DateTime.parse(listrates[0].createdAt.toString());
-          DateTime dt2= DateTime.parse(listrates[1].createdAt.toString());
+          DateTime dt = DateTime.parse(listrates[0].createdAt.toString());
+          DateTime dt2 = DateTime.parse(listrates[1].createdAt.toString());
+          DateTime dt3 = DateTime.parse(listrates[2].createdAt.toString());
+          DateTime dt4 = DateTime.parse(listrates[3].createdAt.toString());
+          DateTime dt5 = DateTime.parse(listrates[4].createdAt.toString());
+          //print(listrates[9].createdAt.toString());
           switch (value.toInt()) {
             case 0:
-              return dt.day.toString()+"/"+dt.month.toString()+"/"+dt.year.toString();
+              return dt.day.toString() +
+                  "/" +
+                  dt.month.toString() +
+                  "/" +
+                  dt.year.toString();
             case 1:
-              return dt2.day.toString()+"/"+dt2.month.toString()+"/"+dt2.year.toString();
+              return dt2.day.toString() +
+                  "/" +
+                  dt2.month.toString() +
+                  "/" +
+                  dt2.year.toString();
+            case 2:
+              return dt3.day.toString() +
+                  "/" +
+                  dt3.month.toString() +
+                  "/" +
+                  dt3.year.toString();
+            case 3:
+              return dt4.day.toString() +
+                  "/" +
+                  dt4.month.toString() +
+                  "/" +
+                  dt4.year.toString();
+            case 4:
+              return dt5.day.toString() +
+                  "/" +
+                  dt5.month.toString() +
+                  "/" +
+                  dt5.year.toString();
             default:
               return '';
           }
@@ -607,12 +588,15 @@ BarChartData barChartData(List<Rates> listrates) {
         x: 0,
         barRods: [
           BarChartRodData(
-            y: double.parse(listrates[0].value.toString()+".0"),
+            y: double.parse(listrates[0].value.toString() + ".0"),
             width: barWidth,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             rodStackItem: [
-              BarChartRodStackItem(0, double.parse(listrates[0].value.toString()+".0"), const Color(0xff2bdb90)),
+              BarChartRodStackItem(
+                  0,
+                  double.parse(listrates[0].value.toString() + ".0"),
+                  const Color(0xff2bdb90)),
             ],
           ),
         ],
@@ -621,31 +605,32 @@ BarChartData barChartData(List<Rates> listrates) {
         x: 1,
         barRods: [
           BarChartRodData(
-            y: double.parse(listrates[1].value.toString()+".0"),
+            y: double.parse(listrates[1].value.toString() + ".0"),
             width: barWidth,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             rodStackItem: [
-              BarChartRodStackItem(0, double.parse(listrates[1].value.toString()+".0"), const Color(0xffffdd80)),
+              BarChartRodStackItem(
+                  0,
+                  double.parse(listrates[1].value.toString() + ".0"),
+                  const Color(0xffffdd80)),
             ],
           ),
         ],
       ),
-
-      /*
       BarChartGroupData(
         x: 2,
         barRods: [
           BarChartRodData(
-            y: 3.5,
+            y: double.parse(listrates[2].value.toString() + ".0"),
             width: barWidth,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             rodStackItem: [
-              BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
-              BarChartRodStackItem(1.5, 3, const Color(0xffffdd80)),
-              BarChartRodStackItem(3, 5, const Color(0xffff4d94)),
-              BarChartRodStackItem(5, 3.5, const Color(0xff19bfff)),
+              BarChartRodStackItem(
+                  0,
+                  double.parse(listrates[2].value.toString() + ".0"),
+                  const Color(0xffff4d94)),
             ],
           ),
         ],
@@ -654,19 +639,36 @@ BarChartData barChartData(List<Rates> listrates) {
         x: 3,
         barRods: [
           BarChartRodData(
-            y: 5,
+            y: double.parse(listrates[3].value.toString() + ".0"),
             width: barWidth,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             rodStackItem: [
-              BarChartRodStackItem(0, 1.2, const Color(0xff2bdb90)),
-              BarChartRodStackItem(1.2, 3, const Color(0xffffdd80)),
-              BarChartRodStackItem(4, 1, const Color(0xffff4d94)),
-              BarChartRodStackItem(5, 4, const Color(0xff19bfff)),
+              BarChartRodStackItem(
+                  0,
+                  double.parse(listrates[3].value.toString() + ".0"),
+                  const Color(0xff19bfff)),
             ],
           ),
         ],
-      ),*/
+      ),
+      BarChartGroupData(
+        x: 4,
+        barRods: [
+          BarChartRodData(
+            y: double.parse(listrates[4].value.toString() + ".0"),
+            width: barWidth,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6), topRight: Radius.circular(6)),
+            rodStackItem: [
+              BarChartRodStackItem(
+                  0,
+                  double.parse(listrates[4].value.toString() + ".0"),
+                  const Color(0xff2ffb90)),
+            ],
+          ),
+        ],
+      ),
     ],
   );
 }

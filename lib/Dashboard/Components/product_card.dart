@@ -1,14 +1,17 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mediapp/utils/const.dart';
+import 'package:mediapp/utils/user.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
     Key key,
     this.itemIndex,
     this.press,
+    this.user,
   }) : super(key: key);
   final int itemIndex;
+  final User user ;
   final Function press;
 
 
@@ -72,7 +75,7 @@ class ProductCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: Constants.kDefaultPadding),
                       child: Text(
-                        "Motif de consultation : \n Rhumatologie , Cardiologie",
+                        "Email : "+user.email +"\nNuméro GSM :"+ user.tel.toString(),
                         style: Theme.of(context).textTheme.button,
                       ),
                     ),
@@ -91,7 +94,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        "Benguaied Foued",
+                        user.name,
                         style: Theme.of(context).textTheme.button,
                       ),
                     ),

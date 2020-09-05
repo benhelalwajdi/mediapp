@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mediapp/Dashboard/Dashboard.dart';
-import 'package:mediapp/screens/list.dart';
+import 'package:mediapp/screens/GraphProduits.dart';
 import 'package:mediapp/screens/newUser_screen.dart';
 import 'package:mediapp/screens/loginPage.dart';
 import 'package:mediapp/utils/const.dart';
+import 'package:mediapp/utils/user.dart';
 
 class Dashboardd extends StatefulWidget {
   @override
   Dashboarddd createState() => new Dashboarddd();
 }
 class Dashboarddd extends State<Dashboardd> {
+
+
+  void _loadData() async {
+    await UserViewModel.loadPlayers();
+  }
+   @override
+  void initState() {
+    // TODO: implement initState
+    _loadData();
+     super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,12 +162,12 @@ void _onTileClicked(BuildContext context, int index) {
   } else if (index == 2) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => listPatient()),
+      MaterialPageRoute(builder: (context) => Dashboard()),
     );
   } else if (index == 3) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => GraphProduits()),
     );
   } else if (index == 4) {
     Navigator.push(

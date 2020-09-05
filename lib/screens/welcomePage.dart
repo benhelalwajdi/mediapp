@@ -63,7 +63,7 @@ class _WelcomePageState extends State<WelcomePage> {
           color: Constants.darkBlue
         ),
         child: Text(
-          'Register now',
+          'Registre',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
@@ -102,7 +102,6 @@ class _WelcomePageState extends State<WelcomePage> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'Test ',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.display1,
             fontSize: 30,
@@ -111,11 +110,11 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           children: [
             TextSpan(
-              text: 'Frac',
+              text: 'FRACTAL',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
             TextSpan(
-              text: 'tal',
+              text: 'TUN',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
           ]),

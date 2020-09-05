@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mediapp/screens/dashboardd.dart';
-import 'package:mediapp/screens/detail_screen.dart';
 import 'package:mediapp/screens/profil.dart';
-import 'package:mediapp/screens/loginPage.dart';
 
-import '../Dashboard.dart';
 
 Widget menu(BuildContext context, Animation<Offset> slideAnimation,
     Animation<double> menuScaleAnimation) {

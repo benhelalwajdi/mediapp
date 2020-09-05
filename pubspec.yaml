@@ -30,6 +30,8 @@ dependencies:
   flutter_datetime_picker: ^1.4.0
   autocomplete_textfield: ^1.6.4
   shared_preferences: ^0.5.10
+  smooth_star_rating: 1.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

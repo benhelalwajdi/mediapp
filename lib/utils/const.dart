@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mediapp/screens/dashboardd.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mediapp/screens/dashboardd.dart';
+import 'package:mediapp/screens/patient/patient_screen.dart';
 
 class Constants {
   // Name
@@ -14,6 +15,7 @@ class Constants {
   static List<String> list_medica = [""] ;
   static List<String> list_jour = [""] ;
 
+  static Map<String, dynamic> b;
 
   static String url = "192.168.1.3";
   static String port = "3000";
@@ -64,6 +66,8 @@ class Constants {
   // Orange
   static Color darkOrange = Color(0xFFFFB74D);
 
+  static var user ;
+
   static ThemeData lighTheme(BuildContext context) {
     return ThemeData(
       backgroundColor: lightBackground,
@@ -84,7 +88,6 @@ class Constants {
   static double headerHeight = 228.5;
   static double paddingSide = 30.0;
 
-  static var user ;
 }
 
 Widget backButton(context) {
@@ -169,6 +172,21 @@ _makePostRequest( TextEditingController userController, TextEditingController pa
 
 Widget submitButton(context, TextEditingController userController,
     TextEditingController passwordController) {
+ /*var bol ;
+  try {
+    if(Constants.user == null){
+      bol= false ;
+    }else{
+    print(Constants.user["name"].toString());
+    bol = true;}
+  } on Exception catch (_) {
+    bol = false;
+    print('never reached');
+  }
+  if(bol) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => DetailPPage()));
+  }else{*/
   return InkWell(
       onTap: () {
         //Navigator.pop(context);
@@ -194,7 +212,35 @@ Widget submitButton(context, TextEditingController userController,
               if(parsedJson['success'] as bool == true){
                 Constants.user = parsedJson['user'];
                 print(true);
-                if(Constants.user["role"]== "pat"){
+                if(Constants.user["role"] == "pat"){
+
+                  var url =
+                      "http://" + Constants.url + ":" + Constants.port + "/api/getUserById/";
+                  var body = jsonEncode({
+                    "_id": Constants.user["monmed"].toString(),
+                  });
+                  print("Body: " + body);
+                   http
+                      .post(url, headers: {"Content-Type": "application/json"}, body: body)
+                      .then((http.Response response) {
+                    print("Response status: ${response.statusCode}");
+                    print("Response body: ${response.contentLength}");
+                    print(response.headers);
+                    print(response.request);
+                    String body = response.body;
+                    print(body);
+                    List<dynamic> parsedJson = json.decode(body);
+                    if (parsedJson != null) {
+                      var a = parsedJson[0];
+                      print(a.toString());
+                      Constants.b = a as Map<String, dynamic>;
+                      print(Constants.b["_id"]);
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => DetailPPage()));
+                    } else {
+                      print(false);
+                    }
+                  });
                   print(Constants.user["role"]);
                 }else if (Constants.user["role"]== "med"){
                   Navigator.push(
@@ -207,23 +253,6 @@ Widget submitButton(context, TextEditingController userController,
               }else{
                 print(false);
               }
-              /*print(parsedJson2['_id'].toString());
-              print(parsedJson2['type'][0].toString());
-              addStringToSF() async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setString('_id', parsedJson2['_id'].toString());
-                prefs.setString('role', parsedJson2['role']);
-              }
-              addStringToSF();
-              getStringValuesSF() async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                String stringValue = prefs.getString('_id');
-                print(stringValue);
-                return stringValue;
-                }
-              getStringValuesSF();
-              */
-              /*Todo*/
             });
         //_makePostRequest(user_controller,password_controller);
         print(userController.text.toString());
@@ -253,6 +282,7 @@ Widget submitButton(context, TextEditingController userController,
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ));
+  //}
 }
 
 Widget createAccountLabel(context) {

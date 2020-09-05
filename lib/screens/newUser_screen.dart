@@ -464,6 +464,27 @@ class _MyHomePageState extends State<HomeScreen> {
                       print(prenomController.text.toString());
                       print(usernomController.text.toString());
                       print(phoneController.text.toString());
+
+                      if(emailController.text.isEmpty){
+
+                      }
+
+                      if(nomController.text.isEmpty){
+
+                      }
+
+                      if(prenomController.text.isEmpty){
+
+                      }
+
+                      if(usernomController.text.isEmpty){
+
+                      }
+
+                      if(phoneController.text.isEmpty){
+
+                      }
+
                       print(birthDate.toString());
                       print(Constants.list_malade.toString());
                       print(Constants.list_medica.toString());

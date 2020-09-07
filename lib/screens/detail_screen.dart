@@ -14,11 +14,13 @@ List<Color> gradientColors = [
 ];
 
 bool showAvg = false;
-
+bool isNull = true;
 // ignore: must_be_immutable
 class DetailPage extends StatefulWidget {
   User item;
+
   DetailPage(this.item);
+
   @override
   DetailScreen createState() => DetailScreen(this.item);
 }
@@ -26,27 +28,22 @@ class DetailPage extends StatefulWidget {
 class DetailScreen extends State<DetailPage> {
   bool H = false;
   bool F = false;
-  bool G = false;bool HFC = false;
+  bool G = false;
+  bool HFC = false;
   User user;
   List<String> listType = [""];
   var medicament = " ";
   var medicaments = " ";
-  var isNull = true;
-  DetailScreen(this.user);
 
-  void _loadData() async {
-    await RatesViewModel.loadPlayers(user.id);
-    if (RatesViewModel.Listrates[0].value == null ){
-      print("it's so bad is Null");
-    }else{
-      isNull = false;
-    }
-  }
+  DetailScreen(this.user);
 
   @override
   void initState() {
-    _loadData();
-
+    _loadData().then((bool value) {
+      // future is completed you can perform your task
+      print("loadData initState " + value.toString());
+      isNull = value;
+    });
     print(user.name.toString());
     for (int i = 0; i < user.type.length; i++) {
       if (i == 0) {
@@ -68,8 +65,24 @@ class DetailScreen extends State<DetailPage> {
     super.initState();
   }
 
+  Future<bool> _loadData() async {
+    await RatesViewModel.loadPlayers(user.id);
+    await new Future.delayed(const Duration(seconds: 1));
+    await RatesViewModel.loadPlayers(user.id);
+    if (RatesViewModel.Listrates.isEmpty) {
+      print("it's so bad is Null");
+      isNull = true;
+    } else {
+      isNull = false;
+    }
+    print(isNull.toString() +"in _loadData");
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    _loadData();
+    print(isNull.toString() +"in build");
     double statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
@@ -214,7 +227,8 @@ class DetailScreen extends State<DetailPage> {
                     child: Container(
                         padding: EdgeInsets.all(0.0),
                         height: 360,
-                        child: Column(children: <Widget>[
+                        child:
+                        Column(children: <Widget>[
                           Row(children: <Widget>[
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,17 +241,11 @@ class DetailScreen extends State<DetailPage> {
                                       fontWeight: FontWeight.w900,
                                       color: Colors.black),
                                 ),
-                                Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: <Widget>[],
-                                )
                               ],
                             ),
                             SizedBox(width: 20),
-                            SizedBox(
+                            isNull
+                                ?Text(" "): SizedBox(
                               width: 34,
                               child: IconButton(
                                 icon: Icon(
@@ -247,14 +255,16 @@ class DetailScreen extends State<DetailPage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
+                                    isNull = false ;
                                     showAvg = !showAvg;
                                   });
                                 },
                               ),
                             ),
+
                           ]),
-                          isNull ?  NoGraph():Graph(showAvg),
-                          ]))),
+                          isNull ? NoGraph(): Graph(showAvg),
+                        ]))),
                 SizedBox(height: 30),
                 Material(
                   shadowColor: Colors.grey.withOpacity(0.01),
@@ -294,8 +304,7 @@ class DetailScreen extends State<DetailPage> {
                                       colors: [
                                         Constants.darkBlue,
                                         Constants.darkGreen
-                                      ])
-                              ),
+                                      ])),
                               child: Text(
                                 'Archive',
                                 style: TextStyle(
@@ -314,17 +323,20 @@ class DetailScreen extends State<DetailPage> {
     );
   }
 }
-
-Widget Graph(showAvg){
-  return showAvg ?
-  LineChart(sampleData1(RatesViewModel.Listrates), swapAnimationDuration: const Duration(milliseconds: 250)) :
-  BarChart(barChartData(RatesViewModel.Listrates), swapAnimationDuration: const Duration(milliseconds: 250));
+Widget Graph(showAvg) {
+  try {
+  return showAvg
+      ? LineChart(sampleData1(RatesViewModel.Listrates),
+          swapAnimationDuration: const Duration(milliseconds: 250))
+      : BarChart(barChartData(RatesViewModel.Listrates),
+          swapAnimationDuration: const Duration(milliseconds: 250));
+  }catch (errors){
+    print(errors);
+  }
 }
-
-Widget NoGraph(){
+Widget NoGraph() {
   return Text("No Data");
 }
-
 LineChartData sampleData1(List<Rates> listrates) {
   return LineChartData(
     minX: 0,
@@ -414,7 +426,6 @@ LineChartData sampleData1(List<Rates> listrates) {
     lineBarsData: linesBarData1(listrates),
   );
 }
-
 List<LineChartBarData> linesBarData1(listrates) {
   final LineChartBarData lineChartBarData1 = LineChartBarData(
     spots: [
@@ -487,8 +498,6 @@ List<LineChartBarData> linesBarData1(listrates) {
     lineChartBarData1,
   ];
 }
-
-// bar Chart
 BarChartData barChartData(List<Rates> listrates) {
   const double barWidth = 22;
   return BarChartData(

@@ -42,7 +42,7 @@ class Dashboarddd extends State<Dashboardd> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Dr Mohamed Haded",
+                      "Dr."+Constants.user["name"] +"\nSpeciality : "+Constants.user["speciality"],
                       style: GoogleFonts.openSans(
                           textStyle: TextStyle(
                               color: Colors.black,
@@ -77,13 +77,6 @@ class GridDashboard extends StatelessWidget {
       pos: 2,
       title: "List des patients",
       img: "assets/icons/list.png",
-      press: () {
-        debugPrint("You tapped on item ");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      },
     );
     Items item3 = new Items(
       pos: 3,
@@ -190,11 +183,9 @@ class Items {
   int pos;
   String title;
   String img;
-  final Function press;
   Items({
     this.pos,
     this.title,
     this.img,
-    this.press,
   });
 }

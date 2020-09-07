@@ -1,17 +1,13 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
-import 'package:calendar_vertical_scroll/calendar_vertical_scroll.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mediapp/Dashboard/Components/product_card.dart';
 import 'package:mediapp/screens/detail_screen.dart';
-import 'package:mediapp/screens/newUser_screen.dart';
 import 'package:mediapp/utils/const.dart';
+import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
 import '../Dashboard.dart';
 import 'Background.dart';
-import 'package:http/http.dart' as http;
 
 // ignore: camel_case_types
 class body extends State<Dashboard> with SingleTickerProviderStateMixin {
@@ -27,11 +23,13 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
   final prenom_Controller = TextEditingController();
   final nom_Controller = TextEditingController();
 
-
   GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
   AutoCompleteTextField searchTextField;
   TextEditingController econtroller = new TextEditingController();
 
+  void _loadDataRate(id) async {
+    await RatesViewModel.loadPlayers(id);
+  }
 
   @override
   void initState() {
@@ -41,6 +39,7 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
     slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
         .animate(controller);
 
+    RatesViewModel.Listrates = [];
     _loadData();
     super.initState();
   }
@@ -57,6 +56,7 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
       build(context);
     });
   }
+
   void _loadData() async {
     await UserViewModel.loadPlayers();
   }
@@ -84,12 +84,11 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
       duration: duration,
       top: 0,
       bottom: 0,
-      left:  0 * screenWidth,
-      right:  0 * screenWidth,
+      left: 0 * screenWidth,
+      right: 0 * screenWidth,
       child: ScaleTransition(
         scale: scaleAnimation,
         child: Material(
-
           color: Constants.lightBlue,
           animationDuration: duration,
           borderRadius: BorderRadius.all(Radius.circular(40)),
@@ -99,54 +98,58 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
             physics: ClampingScrollPhysics(),
             child: Container(
               decoration: new BoxDecoration(
-                  gradient: new LinearGradient(
-                      colors: [
-                        Colors.grey,
-                        Constants.lightBlue,
-                      ],
-                      begin: const FractionalOffset(1.0, 0.0),
-                      end: const FractionalOffset(0.0, 1.0),
-                      stops: [0.0, 1.0],
-                      tileMode: TileMode.clamp),
-                ),
+                gradient: new LinearGradient(
+                    colors: [
+                      Colors.grey,
+                      Constants.lightBlue,
+                    ],
+                    begin: const FractionalOffset(1.0, 0.0),
+                    end: const FractionalOffset(0.0, 1.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
               //color: Constants.lightBlue,
               padding: const EdgeInsets.only(left: 16, right: 16, top: 48),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                    Column(children: <Widget>[
+                  Column(children: <Widget>[
                     Column(children: <Widget>[
                       SizedBox(height: 20),
                       backButton(context),
                       //Positioned(top: 40, left: 0, child: backButton(context)),
                       searchTextField = AutoCompleteTextField<User>(
-                          style: new TextStyle(color: Colors.black, fontSize: 16.0),
+                          style: new TextStyle(
+                              color: Colors.black, fontSize: 16.0),
                           decoration: new InputDecoration(
                               fillColor: Colors.transparent,
                               suffixIcon: Container(
                                 width: 55.0,
                                 height: 60.0,
                               ),
-                              contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
                               filled: true,
                               hintText: 'Recherche Patient par Nom :',
                               hintStyle: TextStyle(color: Colors.black)),
                           itemSubmitted: (item) {
                             print(item.id.toString());
                             print(item.adress.toString());
-                            DateTime s = DateTime.parse(item.createdAt.toString());
-                            print (s.year.toString());
+                            DateTime s =
+                                DateTime.parse(item.createdAt.toString());
+                            print(s.year.toString());
                             setState(
-                                  () => searchTextField.textField.controller.text =
+                              () => searchTextField.textField.controller.text =
                                   item.email,
                             );
                             print(item.id);
-                            if(item == null ){
+                            if (item == null) {
                               print(null);
-                            }else{
+                            } else {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => DetailPage(item)),
+                                MaterialPageRoute(
+                                    builder: (context) => DetailPage(item)),
                               );
                             }
                           },
@@ -176,19 +179,27 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
                           }),
                     ]),
                   ]),
-
                   SizedBox(height: 5),
                   ListView.builder(
                       itemBuilder: (context, index) {
                         return ProductCard(
                           itemIndex: index,
                           user: UserViewModel.user[index],
-                          press: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailPage(UserViewModel.user[index])),
-                            );
+                          press: () async {
+                            _loadDataRate(UserViewModel.user[index].id);
+                            await new Future.delayed(
+                                const Duration(seconds: 1));
+                            try {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailPage(UserViewModel.user[index])),
+                              );
+                              throw 42;
+                            } catch (error) {
+                              print('never reached');
+                            }
                           },
                         );
                       },

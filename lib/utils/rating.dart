@@ -51,31 +51,40 @@ class Rates {
 class RatesViewModel {
   // ignore: non_constant_identifier_names
   static List<Rates> Listrates = [];
-  static String idPat ;
-  static Future loadPlayers() async {
-    var url =
-        "http://"+Constants.url+":"+Constants.port+"/api/rates/ratesByUser/"+idPat.toString();
-    http.get(url, headers: {"Content-Type": "application/json"}).then(
-        (http.Response response) {
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.contentLength}");
-      print(response.headers);
-      print(response.request);
-      String body = response.body;
-      print(body);
-      List<dynamic> listRates;
+  static String idPat;
 
-      Map<String,dynamic> parsedJson = json.decode(body);
-      print(parsedJson["success"].toString());
+  static Future loadPlayers(idPat) async {
+    var url = "http://" +
+        Constants.url +
+        ":" +
+        Constants.port +
+        "/api/rates/ratesByUser/" +
+        idPat.toString();
+    try {
+      http.get(url, headers: {"Content-Type": "application/json"}).then(
+          (http.Response response) {
+        print("Response status: ${response.statusCode}");
+        print("Response body: ${response.contentLength}");
+        print(response.headers);
+        print(response.request);
+        String body = response.body;
+        print(body);
+        List<dynamic> listRates;
 
-      for (int i = 0; i < parsedJson["rates"].length; i++) {
-        print(i);
-        listRates = parsedJson["rates"];
-        print(listRates[i].toString());
-        Rates rates2 = new Rates.fromJson(listRates[i]);
-        Listrates.add(rates2);
-        print(rates2.value);
-      }
-    });
+        Map<String, dynamic> parsedJson = json.decode(body);
+        print(parsedJson["success"].toString());
+
+        for (int i = 0; i < parsedJson["rates"].length; i++) {
+          print(i);
+          listRates = parsedJson["rates"];
+          print(listRates[i].toString());
+          Rates rates2 = new Rates.fromJson(listRates[i]);
+          Listrates.add(rates2);
+          print(rates2.value);
+        }
+      });
+    } catch (error) {
+      print("catched !!");
+    }
   }
 }

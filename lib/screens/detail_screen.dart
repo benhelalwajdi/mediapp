@@ -6,7 +6,6 @@ import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
 import 'package:mediapp/widgets/custom_clipper.dart';
-
 import 'dashboardd.dart';
 
 List<Color> gradientColors = [
@@ -19,9 +18,7 @@ bool showAvg = false;
 // ignore: must_be_immutable
 class DetailPage extends StatefulWidget {
   User item;
-
   DetailPage(this.item);
-
   @override
   DetailScreen createState() => DetailScreen(this.item);
 }
@@ -29,22 +26,27 @@ class DetailPage extends StatefulWidget {
 class DetailScreen extends State<DetailPage> {
   bool H = false;
   bool F = false;
-  bool G = false;
-
-  // ignore: non_constant_identifier_names
-  bool HFC = false;
+  bool G = false;bool HFC = false;
   User user;
   List<String> listType = [""];
   var medicament = " ";
   var medicaments = " ";
+  var isNull = true;
+  DetailScreen(this.user);
 
   void _loadData() async {
-    await RatesViewModel.loadPlayers();
+    await RatesViewModel.loadPlayers(user.id);
+    if (RatesViewModel.Listrates[0].value == null ){
+      print("it's so bad is Null");
+    }else{
+      isNull = false;
+    }
   }
 
   @override
   void initState() {
     _loadData();
+
     print(user.name.toString());
     for (int i = 0; i < user.type.length; i++) {
       if (i == 0) {
@@ -65,8 +67,6 @@ class DetailScreen extends State<DetailPage> {
     RatesViewModel.idPat = user.id;
     super.initState();
   }
-
-  DetailScreen(this.user);
 
   @override
   Widget build(BuildContext context) {
@@ -109,11 +109,7 @@ class DetailScreen extends State<DetailPage> {
                       child: RawMaterialButton(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         onPressed: () {
-  /*                        for (int i = 0 ; i < 5 ; i++){
-                            RatesViewModel.Listrates[i].value = 0;
-                            RatesViewModel.Listrates[i].createdAt = user.createdAt;
-                          }
-*/                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: Icon(Icons.arrow_back_ios,
                             size: 15.0, color: Colors.white),
@@ -204,7 +200,6 @@ class DetailScreen extends State<DetailPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text("Prescription : " + medicaments),
-                              // Lactose nigelle H"),"),
                             ]),
                       ],
                     ),
@@ -258,18 +253,8 @@ class DetailScreen extends State<DetailPage> {
                               ),
                             ),
                           ]),
-                          showAvg
-                              ? LineChart(
-                                  sampleData1(RatesViewModel.Listrates),
-                                  swapAnimationDuration:
-                                      const Duration(milliseconds: 250),
-                                )
-                              : BarChart(
-                                  barChartData(RatesViewModel.Listrates),
-                                  swapAnimationDuration:
-                                      const Duration(milliseconds: 250),
-                                )
-                        ]))),
+                          isNull ?  NoGraph():Graph(showAvg),
+                          ]))),
                 SizedBox(height: 30),
                 Material(
                   shadowColor: Colors.grey.withOpacity(0.01),
@@ -284,7 +269,6 @@ class DetailScreen extends State<DetailPage> {
                       children: <Widget>[
                         InkWell(
                             onTap: () {
-                              //Navigator.pop(context);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -310,7 +294,8 @@ class DetailScreen extends State<DetailPage> {
                                       colors: [
                                         Constants.darkBlue,
                                         Constants.darkGreen
-                                      ])),
+                                      ])
+                              ),
                               child: Text(
                                 'Archive',
                                 style: TextStyle(
@@ -328,6 +313,16 @@ class DetailScreen extends State<DetailPage> {
       ),
     );
   }
+}
+
+Widget Graph(showAvg){
+  return showAvg ?
+  LineChart(sampleData1(RatesViewModel.Listrates), swapAnimationDuration: const Duration(milliseconds: 250)) :
+  BarChart(barChartData(RatesViewModel.Listrates), swapAnimationDuration: const Duration(milliseconds: 250));
+}
+
+Widget NoGraph(){
+  return Text("No Data");
 }
 
 LineChartData sampleData1(List<Rates> listrates) {

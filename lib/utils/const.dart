@@ -149,7 +149,7 @@ Widget emailPasswordWidget(TextEditingController userController,
 Widget submitButton(context, TextEditingController userController,
     TextEditingController passwordController) {
   return InkWell(
-      onTap: () {
+      onTap: () async {
         //Navigator.pop(context);
         var url = "http://" +
             Constants.url +
@@ -161,8 +161,8 @@ Widget submitButton(context, TextEditingController userController,
           "password": passwordController.text.toString()
         });
         print("Body: " + body);
-        http.post(url, headers: {"Content-Type": "application/json"}, body: body)
-            .then((http.Response response) {
+        await http.post(url, headers: {"Content-Type": "application/json"}, body: body)
+            .then((http.Response response) async {
               print("Response status: ${response.statusCode}");
               print("Response body: ${response.contentLength}");
               print(response.headers);
@@ -181,7 +181,7 @@ Widget submitButton(context, TextEditingController userController,
                     "_id": Constants.user["monmed"].toString(),
                   });
                   print("Body: " + body);
-                   http
+                  await http
                       .post(url, headers: {"Content-Type": "application/json"}, body: body)
                       .then((http.Response response) {
                     print("Response status: ${response.statusCode}");

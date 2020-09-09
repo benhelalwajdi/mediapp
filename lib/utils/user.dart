@@ -4,23 +4,6 @@ import 'package:http/http.dart' as http;
 import 'const.dart';
 
 class User {
-  /*
-  * {
-  "_id" : "1",
-  "name": "user",
-  "email": "user@user.com",
-  "password": "pass",
-  "username": "user",
-  "role": "pat",
-  "speciality": "",
-  "address": "52 city nassime",
-  "tel": "00216 23121414",
-  "monmed": "2",
-  "type": ["INFECTION"],
-  "medicaments":["H"],
-  "code": "7486332443",
-  "evaluation": "1"
-  },*/
   var id;
   var name;
   var email;
@@ -77,7 +60,7 @@ class UserViewModel {
   static List<User> user = [];
   static Future loadPlayers() async {
     var url = "http://"+Constants.url+":"+Constants.port+"/api/admin/allUsersByRole/pat";
-    http.get(url, headers: {"Content-Type": "application/json"}).then(
+    await http.get(url, headers: {"Content-Type": "application/json"}).then(
         (http.Response response) {
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.contentLength}");
@@ -88,9 +71,6 @@ class UserViewModel {
       List<dynamic> parsedJson = json.decode(body);
       List<User> user2;
       for (int i = 0; i < parsedJson.length; i++) {
-        /*print(parsedJson[i].toString());
-        print(user[i].type[0]);
-        print(user[i].adress);*/
         User us = new User.fromJson(parsedJson[i]);
         print(us.createdAt.toString());
         if(i==0){

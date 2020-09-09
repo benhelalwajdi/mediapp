@@ -61,7 +61,7 @@ class RatesViewModel {
         "/api/rates/ratesByUser/" +
         idPat.toString();
     try {
-      http.get(url, headers: {"Content-Type": "application/json"}).then(
+       await http.get(url, headers: {"Content-Type": "application/json"}).then(
           (http.Response response) {
         print("Response status: ${response.statusCode}");
         print("Response body: ${response.contentLength}");
@@ -70,7 +70,6 @@ class RatesViewModel {
         String body = response.body;
         print(body);
         List<dynamic> listRates;
-
         Map<String, dynamic> parsedJson = json.decode(body);
         print(parsedJson["success"].toString());
 

@@ -67,8 +67,6 @@ class DetailScreen extends State<DetailPage> {
 
   Future<bool> _loadData() async {
     await RatesViewModel.loadPlayers(user.id);
-    await new Future.delayed(const Duration(seconds: 1));
-    await RatesViewModel.loadPlayers(user.id);
     if (RatesViewModel.Listrates.isEmpty) {
       print("it's so bad is Null");
       isNull = true;

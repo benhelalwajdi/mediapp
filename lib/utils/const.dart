@@ -17,7 +17,7 @@ class Constants {
 
   static Map<String, dynamic> b;
 
-  static String url = "192.168.1.7";
+  static String url = "192.168.1.29";
   static String port = "3000";
 
   static const kPrimaryColor = Color(0xFF6F35A5);

@@ -72,18 +72,17 @@ class RatesViewModel {
         List<dynamic> listRates;
         Map<String, dynamic> parsedJson = json.decode(body);
         print(parsedJson["success"].toString());
-
         for (int i = 0; i < parsedJson["rates"].length; i++) {
           print(i);
           listRates = parsedJson["rates"];
           print(listRates[i].toString());
           Rates rates2 = new Rates.fromJson(listRates[i]);
-          Listrates.add(rates2);
-          print(rates2.value);
+          Listrates.insert(i,rates2);
+          print("data value rate "+rates2.value.toString());
         }
       });
     } catch (error) {
-      print("catched !!");
+      print(error);
     }
   }
 }

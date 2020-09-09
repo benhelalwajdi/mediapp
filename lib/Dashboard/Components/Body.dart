@@ -186,9 +186,7 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
                           itemIndex: index,
                           user: UserViewModel.user[index],
                           press: () async {
-                            _loadDataRate(UserViewModel.user[index].id);
-                            await new Future.delayed(
-                                const Duration(seconds: 1));
+                           //await _loadDataRate(UserViewModel.user[index].id);
                             try {
                               Navigator.push(
                                 context,

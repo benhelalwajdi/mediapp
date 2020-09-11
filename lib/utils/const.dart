@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:mediapp/screens/admin/adminDashboard.dart';
 import 'package:mediapp/screens/dashboardd.dart';
 import 'package:mediapp/screens/patient/patient_screen.dart';
 
@@ -17,7 +18,7 @@ class Constants {
 
   static Map<String, dynamic> b;
 
-  static String url = "192.168.1.29";
+  static String url = "192.168.1.3";
   static String port = "3000";
 
   static const kPrimaryColor = Color(0xFF6F35A5);
@@ -113,6 +114,10 @@ Widget backButton(context) {
 
 Widget entryField(String title, TextEditingController controller,
     {bool isPassword = false}) {
+  var hint = title ;
+  if (title == "Telephone"){
+    hint = "ex: 00 216 208 300 300";
+  }
   return Container(
     margin: EdgeInsets.symmetric(vertical: 10),
     child: Column(
@@ -129,6 +134,7 @@ Widget entryField(String title, TextEditingController controller,
             controller: controller,
             obscureText: isPassword,
             decoration: InputDecoration(
+                hintText: hint,
                 border: InputBorder.none,
                 fillColor: Color(0xfff3f3f4),
                 filled: true))
@@ -209,6 +215,8 @@ Widget submitButton(context, TextEditingController userController,
                   print(Constants.user["role"]);
                 }else{
                   //wajdi@med.com
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => adminDashboardd()));
                   print(Constants.user["role"]);
                 }
               }else{

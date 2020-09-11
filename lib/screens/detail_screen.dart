@@ -286,12 +286,37 @@ class DetailScreen extends State<DetailPage> {
                     child: Column(
                       children: <Widget>[
                         InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Dashboardd()));
-                            },
+                            onTap: () async {
+                              try {
+                                var body = jsonEncode({
+                                  "user": user.id.toString(),
+                                  "his": "false"
+                                });
+                                var url = "http://" +
+                                    Constants.url +
+                                    ":" +
+                                    Constants.port +
+                                    "/api/fich/fichInHistory/true";
+                                await http
+                                    .post(url,
+                                    headers: {
+                                      "Content-Type": "application/json"
+                                    },
+                                    body: body)
+                                    .then((http.Response response) {
+                                  var parsedJson = json.decode(body);
+                                  if (parsedJson['success'] as bool == true) {
+                                    print(true);
+                                  }
+                                });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Dashboardd()));
+                              }catch (error){
+                                print("archiver error detail_screen : "+error.toString());
+                              }
+                              },
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.symmetric(vertical: 15),

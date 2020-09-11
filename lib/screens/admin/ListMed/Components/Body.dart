@@ -6,11 +6,11 @@ import 'package:mediapp/screens/detail_screen.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
-import '../Dashboard.dart';
+import '../ListMed.dart';
 import 'Background.dart';
 
 // ignore: camel_case_types
-class body extends State<Dashboard> with SingleTickerProviderStateMixin {
+class body extends State<ListMed> with SingleTickerProviderStateMixin {
   var first = true;
 
   bool isCollapsed = true;
@@ -56,9 +56,16 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
       build(context);
     });
   }
-
+var size = 0 ;
   void _loadData() async {
     await UserViewModel.loadPlayers();
+    try{
+      setState(() {
+        size = UserViewModel.user.length;
+      });
+    }catch(error){
+      size = 0;
+    }
   }
 
   @override
@@ -200,7 +207,7 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
                         );
                       },
                       shrinkWrap: true,
-                      itemCount: 4),
+                      itemCount: size ),
                 ],
               ),
             ),

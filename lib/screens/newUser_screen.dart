@@ -4,12 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:mediapp/screens/dashboardd.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/widgets/card_eval.dart';
 import 'package:mediapp/widgets/card_malade.dart';
 import 'package:mediapp/widgets/card_section.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   final String prenom;
@@ -85,27 +85,27 @@ class _MyHomePageState extends State<HomeScreen> {
                         maxTime: DateTime(
                             this.now.year, this.now.month, this.now.day),
                         onChanged: (date) {
-                      setState(() {});
-                      print('change $date');
-                    }, onConfirm: (date) {
-                      setState(() {});
-                      print('confirm $date');
-                      birthDate = date;
-                      DateTime currentDate = DateTime.now();
-                      age = currentDate.year - birthDate.year;
-                      int month1 = currentDate.month;
-                      int month2 = birthDate.month;
-                      if (month2 > month1) {
-                        age--;
-                      } else if (month1 == month2) {
-                        int day1 = currentDate.day;
-                        int day2 = birthDate.day;
-                        if (day2 > day1) {
-                          age--;
-                        }
-                      }
-                      print('confirm $age');
-                    }, currentTime: DateTime.now(), locale: LocaleType.fr);
+                          setState(() {});
+                          print('change $date');
+                        }, onConfirm: (date) {
+                          setState(() {});
+                          print('confirm $date');
+                          birthDate = date;
+                          DateTime currentDate = DateTime.now();
+                          age = currentDate.year - birthDate.year;
+                          int month1 = currentDate.month;
+                          int month2 = birthDate.month;
+                          if (month2 > month1) {
+                            age--;
+                          } else if (month1 == month2) {
+                            int day1 = currentDate.day;
+                            int day2 = birthDate.day;
+                            if (day2 > day1) {
+                              age--;
+                            }
+                          }
+                          print('confirm $age');
+                        }, currentTime: DateTime.now(), locale: LocaleType.fr);
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -458,81 +458,159 @@ class _MyHomePageState extends State<HomeScreen> {
                   new RaisedButton(
                     color: Colors.lightBlue,
                     child: new Text('Enregistre'),
-                    onPressed: () {
+                    onPressed: () async {
                       print(emailController.text.toString());
                       print(nomController.text.toString());
                       print(prenomController.text.toString());
                       print(usernomController.text.toString());
                       print(phoneController.text.toString());
 
-                      if(emailController.text.isEmpty){
-
-                      }
-
-                      if(nomController.text.isEmpty){
-
-                      }
-
-                      if(prenomController.text.isEmpty){
-
-                      }
-
-                      if(usernomController.text.isEmpty){
-
-                      }
-
-                      if(phoneController.text.isEmpty){
-
-                      }
-
-                      print(birthDate.toString());
-                      print(Constants.list_malade.toString());
-                      print(Constants.list_medica.toString());
-                      print(Constants.list_jour.toString());
-                      var url = "http://" +
-                          Constants.url +
-                          ":" +
-                          Constants.port +
-                          "/api/adduser";
-                      var body = jsonEncode({
-                        "email": emailController.text,
-                        "name": nomController.text +" "+prenomController.text,
-                        "password": "w",
-                        "role" : "pat",
-                        "address": "w",
-                        "tel": phoneController.text,
-                        "monmed": "5f48c0329897243b285f3b1a",
-                        "username" : usernomController.text,
-                        "code": "123",
-                        "evaluation":Constants.list_jour[1],
-                        "type" : Constants.list_malade,
-                        "medicaments" : Constants.list_medica,
-                        "dateaniv": birthDate.toString()
-                      });
-                      print("Body: " + body);
-                      http
-                          .post(url,
+                      if (emailController.text.isEmpty) {
+                        try {
+                          _showDialog(context, "Attention",
+                              "Champ Email et vide", "fermé");
+                        } catch (error) {
+                          print(error);
+                        }
+                      } else if (nomController.text.isEmpty) {
+                        try {
+                          _showDialog(context, "Attention", "Champ Nom et vide",
+                              "fermé");
+                        } catch (error) {
+                          print(error);
+                        }
+                      } else if (prenomController.text.isEmpty) {
+                        try {
+                          _showDialog(context, "Attention",
+                              "Champ Prènom et vide", "fermé");
+                        } catch (error) {
+                          print(error);
+                        }
+                      } else if (usernomController.text.isEmpty) {
+                        try {
+                          _showDialog(context, "Attention",
+                              "Champ username et vide", "fermé");
+                        } catch (error) {
+                          print(error);
+                        }
+                      } else if (phoneController.text.isEmpty) {
+                        try {
+                          _showDialog(context, "Attention",
+                              "Champ Telephone et vide", "fermé");
+                        } catch (error) {
+                          print(error);
+                        }
+                      } else if (phoneController.text.isNotEmpty) {
+                        try {
+                          var decimal = int.parse(phoneController.text);
+                        } catch (error) {
+                          _showDialog(
+                              context,
+                              "Attention",
+                              "vous ne pouvez pas enregistre un numero telephone avec des caractaire.\n ex : 00 216 23123414",
+                              "fermé");
+                        }
+                      } else {
+                        print(birthDate.toString());
+                        print(Constants.list_malade.toString());
+                        print(Constants.list_medica.toString());
+                        print(Constants.list_jour.toString());
+                        var url = "http://" +
+                            Constants.url +
+                            ":" +
+                            Constants.port +
+                            "/api/adduser";
+                        var body = jsonEncode({
+                          "email": emailController.text,
+                          "name":
+                          nomController.text + " " + prenomController.text,
+                          "password": "w",
+                          "role": "pat",
+                          "address": "w",
+                          "tel": phoneController.text,
+                          "monmed": Constants.user["_id"],
+                          "username": usernomController.text,
+                          "code": "123",
+                          "evaluation": Constants.list_jour[1],
+                          "type": Constants.list_malade,
+                          "medicaments": Constants.list_medica,
+                          "dateaniv": birthDate.toString()
+                        });
+                        print("Body: " + body);
+                        try {
+                          await http
+                              .post(url,
                               headers: {"Content-Type": "application/json"},
                               body: body)
-                          .then((http.Response response) {
-                        print("Response status: ${response.statusCode}");
-                        print("Response body: ${response.contentLength}");
-                        print(response.headers);
-                        print(response.request);
-                        String body = response.body;
-                        print(body);
-                        var parsedJson = json.decode(body);
-                        if (parsedJson['success'] as bool == true) {
-                          print(true);
-                        } else {
-                          print(false);
-                        }
-                      });
-                      Navigator.push(
+                              .then((http.Response response) async {
+                            print("Response status: ${response.statusCode}");
+                            print("Response body: ${response.contentLength}");
+                            print(response.headers);
+                            print(response.request);
+                            String body = response.body;
+                            print(body);
+                            var parsedJson = json.decode(body);
+                            if (parsedJson['success'] as bool == true) {
+                              print(true);
+                              Map<String, dynamic> parsedJson =
+                              json.decode(body);
+                              print(parsedJson["success"].toString());
+                              for (int i = 0; i < 1; i++) {
+                                print(i);
+                                Map<String, dynamic> listRates =
+                                parsedJson["msg"];
+                                print(listRates["_id"].toString());
+                                var body = jsonEncode({
+                                  "user": listRates["_id"].toString(),
+                                  "medicaments": Constants.list_medica,
+                                  "type": Constants.list_malade,
+                                  "his": "true"
+                                });
+                                var url = "http://" +
+                                    Constants.url +
+                                    ":" +
+                                    Constants.port +
+                                    "/api/fich/addfich";
+                                await http
+                                    .post(url,
+                                    headers: {
+                                      "Content-Type": "application/json"
+                                    },
+                                    body: body)
+                                    .then((http.Response response) {
+                                  print(
+                                      "Response status: ${response.statusCode}");
+                                  print(
+                                      "Response body: ${response.contentLength}");
+                                  print(response.headers);
+                                  print(response.request);
+                                  String body = response.body;
+                                  print(body);
+                                  var parsedJson = json.decode(body);
+                                  if (parsedJson['success'] as bool == true) {
+                                    print(true);
+                                  }
+                                });
+                                /*
+                            var a = json.decode(listRates[i]);
+                            print(a["_id"]);
+                            */
+                              }
+                            } else {
+                              print(false);
+                            }
+                          });
+
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Dashboardd()),
                           );
+                        } catch (error) {
+                          print("When you add new user and new fich : " +
+                              error.toString());
+                        }
+                      }
                     },
                   ),
                   new RaisedButton(
@@ -550,4 +628,27 @@ class _MyHomePageState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+void _showDialog(context, titre, content, btnText) {
+  // flutter defined function
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: new Text(titre),
+        content: new Text(content),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            child: new Text(btnText),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

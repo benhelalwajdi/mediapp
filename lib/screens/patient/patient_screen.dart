@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/widgets/custom_clipper.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:http/http.dart' as http;
 
 import 'change_password.dart';
 
 void main() => runApp(MaterialApp(
-  home: DetailPPage(),
-));
+      home: DetailPPage(),
+    ));
 
 class DetailPPage extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class DetailScreen extends State<DetailPPage> {
   bool G = false;
   bool HFC = false;
   var rating = 3.0;
-  var ratingBol = true;
+  var ratingBol = false;
   var dateConsultation;
   var medicament = "";
   var malade = "";
@@ -33,7 +33,7 @@ class DetailScreen extends State<DetailPPage> {
 
   @override
   initState() {
-    // TODO: implement initState
+    _loadRatingHistory();
     dateConsultation = DateTime.parse(Constants.user["updatedAt"].toString());
     print(dateConsultation.toString());
     List<dynamic> listType = Constants.user["type"];
@@ -46,13 +46,15 @@ class DetailScreen extends State<DetailPPage> {
       print(listmed[i].toString());
       medicament = medicament + " " + listmed[i].toString();
     }
+
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     Widget child;
     Widget childBtn;
-    if (ratingBol) {
+    if (!ratingBol) {
       child = SmoothStarRating(
         rating: rating,
         isReadOnly: false,
@@ -75,7 +77,6 @@ class DetailScreen extends State<DetailPPage> {
         onTap: () {
           setState(() {
             var url = Constants.url + "/api/rates/addRates/";
-
             listmed = Constants.user["medicaments"];
             for (int i = 0; i < listmed.length; i++) {
               //print(listmed[i].toString());
@@ -112,12 +113,12 @@ class DetailScreen extends State<DetailPPage> {
               });
 
               if (j == ((listIdMed.length) - 1)) {
-                ratingBol = false;
+                ratingBol = !ratingBol;
               }
               print("Body: " + body);
               http
                   .post(url,
-                  headers: {"Content-Type": "application/json"}, body: body)
+                      headers: {"Content-Type": "application/json"}, body: body)
                   .then((http.Response response) {
                 print("Response status: ${response.statusCode}");
                 print("Response body: ${response.contentLength}");
@@ -127,7 +128,6 @@ class DetailScreen extends State<DetailPPage> {
                 print(body);
                 var parsedJson = json.decode(body);
                 if (parsedJson['success'] as bool == true) {
-                  Constants.user = parsedJson['user'];
                   print(true);
                 } else {
                   print(false);
@@ -164,8 +164,7 @@ class DetailScreen extends State<DetailPPage> {
             fontSize: 25, fontWeight: FontWeight.w900, color: Colors.white),
       );
       childBtn = InkWell(
-        onTap: () {
-        },
+        onTap: () {},
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 20),
           padding: EdgeInsets.all(15),
@@ -190,135 +189,193 @@ class DetailScreen extends State<DetailPPage> {
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
-        backgroundColor: Constants.backgroundColor,
-        body: Stack(children: <Widget>[
-          ClipPath(
-            clipper: MyCustomClipper(clipType: ClipType.bottom),
-            child: Container(
-              color: Constants.lightBlue,
-              height: Constants.headerHeight + statusBarHeight,
-            ),
-          ),
-          Positioned(
-            right: -45,
-            top: -30,
-            child: ClipOval(
-              child: Container(
-                color: Colors.black.withOpacity(0.05),
-                height: 220,
-                width: 220,
+            backgroundColor: Constants.backgroundColor,
+            body: Stack(children: <Widget>[
+              ClipPath(
+                clipper: MyCustomClipper(clipType: ClipType.bottom),
+                child: Container(
+                  color: Constants.lightBlue,
+                  height: Constants.headerHeight + statusBarHeight,
+                ),
               ),
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.all(Constants.paddingSide),
-              child:
-              ListView(scrollDirection: Axis.vertical, children: <Widget>[
-                Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 34,
-                        child: RawMaterialButton(
-                          materialTapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap,
-                          onPressed: () {
-                            _onWillPop();
-                          },
-                          child: Icon(Icons.arrow_back_ios,
-                              size: 15.0, color: Colors.white),
-                          shape: CircleBorder(
-                            side: BorderSide(
-                                color: Colors.white,
-                                width: 2,
-                                style: BorderStyle.solid),
-                          ),
+              Positioned(
+                right: -45,
+                top: -30,
+                child: ClipOval(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.05),
+                    height: 220,
+                    width: 220,
+                  ),
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.all(Constants.paddingSide),
+                  child: ListView(
+                      scrollDirection: Axis.vertical,
+                      children: <Widget>[
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 34,
+                                child: RawMaterialButton(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  onPressed: () {
+                                    _onWillPop();
+                                  },
+                                  child: Icon(Icons.arrow_back_ios,
+                                      size: 15.0, color: Colors.white),
+                                  shape: CircleBorder(
+                                    side: BorderSide(
+                                        color: Colors.white,
+                                        width: 2,
+                                        style: BorderStyle.solid),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 34,
+                                child: RawMaterialButton(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                newPassword()));
+                                  },
+                                  child: Icon(Icons.account_circle,
+                                      size: 40.0, color: Colors.white),
+                                ),
+                              ),
+                            ]),
+                        Text(
+                          "Bonjour ! \n" +
+                              Constants.user["name"].toString() +
+                              "\n",
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white),
                         ),
-                      ),
-                      SizedBox(
-                        width: 34,
-                        child: RawMaterialButton(
-                          materialTapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap,
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => newPassword()));
-                          },
-                          child: Icon(Icons.account_circle,
-                              size: 40.0, color: Colors.white),
+                        SizedBox(height: 80),
+                        Text(
+                          "DERNIERE CONSULTATION :\nLe " +
+                              dateConsultation.day.toString() +
+                              "/" +
+                              dateConsultation.month.toString() +
+                              "/" +
+                              dateConsultation.month.toString() +
+                              " avec Dr." +
+                              Constants.b["name"],
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black),
                         ),
-                      ),
-                    ]),
-                Text(
-                  "Bonjour ! \n" + Constants.user["name"].toString() + "\n",
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white),
-                ),
-                SizedBox(height: 80),
-                Text(
-                  "DERNIERE CONSULTATION :\nLe " +
-                      dateConsultation.day.toString() +
-                      "/" +
-                      dateConsultation.month.toString() +
-                      "/" +
-                      dateConsultation.month.toString() +
-                      " avec Dr." +
-                      Constants.b["name"],
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black),
-                ),
-                SizedBox(height: 40),
-                Text(
-                  "MOTIF DE CONSULTATION : " + malade.toString() + "\n",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black),
-                ),
-                Text(
-                  "LACTOSE NIGELLE : " + medicament.toString() + "\n",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black),
-                ),
-                Text(
-                  "Comment allez-vous aujourd’hui ?: \n",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black),
-                ),
-                child,
-                childBtn,
-              ]))
-        ])
-        )
-    );
+                        SizedBox(height: 40),
+                        Text(
+                          "MOTIF DE CONSULTATION : " + malade.toString() + "\n",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "LACTOSE NIGELLE : " + medicament.toString() + "\n",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "Comment allez-vous aujourd’hui ?: \n",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black),
+                        ),
+                        child,
+                        childBtn,
+                      ]))
+            ])));
   }
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Vous étes sur ?'),
-        content: new Text('Voulez-vous quitter une application ?'),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('Non'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Vous étes sur ?'),
+            content: new Text('Voulez-vous quitter une application ?'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Non'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Oui'),
+              ),
+            ],
           ),
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: new Text('Oui'),
-          ),
-        ],
-      ),
-    )) ?? false;
+        )) ??
+        false;
+  }
+
+  var display = false;
+
+  Future<void> _loadRatingHistory() async {
+    var url = Constants.url +
+        "/api/rates/ratesByUser/" +
+        Constants.user["_id"].toString();
+    await http.get(url, headers: {"Content-Type": "application/json"}).then(
+        (http.Response response) async {
+      String body = response.body;
+      print(body);
+      var parsedJson = json.decode(body);
+      if (parsedJson['success'] as bool == true) {
+        if (parsedJson['rates'] == null) {
+          ratingBol = true ;
+        } else {
+          List<dynamic> d = parsedJson['rates'];
+          print(d[d.length - 1]);
+          print(d[d.length - 1]["createdAt"]);
+          var birthday =
+              DateTime.parse(d[d.length - 1]["createdAt"].toString());
+          var date2 = DateTime.now();
+
+          if (Constants.user["evaluation"] == "1*/Jour") {
+            var difference = date2.difference(birthday).inHours;
+            print(difference.toString());
+            if(difference < 24){
+              setState(() {
+                ratingBol = true ;
+              });
+            }
+          }else if (Constants.user["evaluation"] == "1*/Semaine"){
+            var difference = date2.difference(birthday).inDays;
+            print(difference.toString());
+            if(difference < 7){
+              setState(() {
+                ratingBol = true ;
+              });
+            }
+          }else if (Constants.user["evaluation"] == "1*/Mois"){
+            var difference = date2.difference(birthday).inDays;
+            print(difference.toString());
+            if(difference < 7){
+              setState(() {
+                ratingBol = true ;
+              });
+            }
+          }
+        }
+      }
+    });
   }
 
   @override

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mediapp/screens/GraphProduits.dart';
 import 'package:mediapp/screens/admin/ListMed/ListMed.dart';
+import 'package:mediapp/screens/admin/detail_all.dart';
 import 'package:mediapp/screens/loginPage.dart';
 import 'package:mediapp/utils/const.dart';
 
 import 'ajoutMed.dart';
+import 'detail_med.dart';
 
 // ignore: camel_case_types
 class adminDashboardd extends StatefulWidget {
@@ -18,45 +20,96 @@ class Dashboarddd extends State<adminDashboardd> {
   void initState() {
     super.initState();
   }
+  void _showDialog(context, titre, content, btnText) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(titre),
+          content: new Text(content),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(btnText),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 60,
+  void dispose() {
+    _showDialog(context, "test", "test", "test");
+    super.dispose();
+  }
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Vous étes sur ?'),
+        content: new Text('Voulez-vous quitter une application ?'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('Non'),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 16, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Oui'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+  @override
+  Widget build(BuildContext context)
+  {
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+        body: new Center(
+          child:  Column(
+            children: <Widget>[
+              SizedBox(
+                height: 60,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      Constants.user["name"],
-                      style: GoogleFonts.openSans(
-                          textStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                    SizedBox(
-                      height: 4,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          Constants.user["name"],
+                          style: GoogleFonts.openSans(
+                              textStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              GridDashboard()
+            ],
           ),
-          SizedBox(
-            height: 40,
-          ),
-          GridDashboard()
-        ],
+        ),
       ),
     );
   }
@@ -96,7 +149,7 @@ class GridDashboard extends StatelessWidget {
     Items item7 = new Items(
       pos: 7,
       title: "Aperçu",
-      img: "assets/icons/order-history.png",
+      img: "assets/icons/graph.png",
     );
     List<Items> myList = [item1, item2, item3, item4, item5, item6, item7];
     return Flexible(
@@ -176,6 +229,11 @@ void _onTileClicked(BuildContext context, int index) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
+    );}
+    else if (index == 6) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Detailall()),
     );
   }
 }

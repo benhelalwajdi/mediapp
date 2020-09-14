@@ -58,8 +58,9 @@ class User {
 
 class UserViewModel {
   static List<User> user = [];
+  static List<User> pat = [];
   static Future loadPlayers() async {
-    var url = "http://"+Constants.url+":"+Constants.port+"/api/admin/allUsersByRole/pat";
+    var url = Constants.url+"/api/admin/allUsersByMed/"+Constants.user["_id"]+"/pat";
     await http.get(url, headers: {"Content-Type": "application/json"}).then(
         (http.Response response) {
       print("Response status: ${response.statusCode}");
@@ -88,6 +89,40 @@ class UserViewModel {
           us.medicaments.add("tt");
         }
         print(user2[i].type[0]);
+      }
+      user = user2;
+
+    });
+  }
+
+
+}
+
+
+class MedViewModel {
+  static List<User> user = [];
+  static Future loadPlayers() async {
+    var url = Constants.url+"/api/admin/allUsersByRole/med";
+    await http.get(url, headers: {"Content-Type": "application/json"}).then(
+        (http.Response response) {
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.contentLength}");
+      print(response.headers);
+      print(response.request);
+      String body = response.body;
+      print(body);
+      List<dynamic> parsedJson = json.decode(body);
+      List<User> user2;
+      for (int i = 0; i < parsedJson.length; i++) {
+        User us = new User.fromJson(parsedJson[i]);
+        print(us.createdAt.toString());
+        if(i==0){
+        user2 = [us];
+        }
+        if(i != 0){
+        user2.add(us);
+        }
+        print(us.email.toString());
       }
       user = user2;
     });

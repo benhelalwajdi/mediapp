@@ -294,8 +294,6 @@ class DetailScreen extends State<DetailPage> {
                                 });
                                 var url = "http://" +
                                     Constants.url +
-                                    ":" +
-                                    Constants.port +
                                     "/api/fich/fichInHistory/true";
                                 await http
                                     .post(url,
@@ -668,10 +666,8 @@ BarChartData barChartData(List<Rates> listrates) {
 
 Future loadPlayers(idPat) async {
   Listrates = [];
-  var url = "http://" +
+  var url =
       Constants.url +
-      ":" +
-      Constants.port +
       "/api/rates/ratesByUser/" +
       idPat.toString();
   try {

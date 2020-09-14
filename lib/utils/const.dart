@@ -18,7 +18,7 @@ class Constants {
 
   static Map<String, dynamic> b;
 
-  static String url = "192.168.1.3";
+  static String url = "http://fractaltun.herokuapp.com";
   static String port = "3000";
 
   static const kPrimaryColor = Color(0xFF6F35A5);
@@ -156,73 +156,64 @@ Widget submitButton(context, TextEditingController userController,
     TextEditingController passwordController) {
   return InkWell(
       onTap: () async {
-        //Navigator.pop(context);
-        var url = "http://" +
-            Constants.url +
-            ":" +
-            Constants.port +
+        var url = Constants.url +
             "/api/authenticate";
         var body = jsonEncode({
           "username": userController.text.toString(),
           "password": passwordController.text.toString()
         });
         print("Body: " + body);
-        await http.post(url, headers: {"Content-Type": "application/json"}, body: body)
-            .then((http.Response response) async {
-              print("Response status: ${response.statusCode}");
-              print("Response body: ${response.contentLength}");
-              print(response.headers);
-              print(response.request);
-              String body = response.body;
-              print(body);
-              var parsedJson = json.decode(body);
-              if(parsedJson['success'] as bool == true){
-                Constants.user = parsedJson['user'];
-                print(true);
-                if(Constants.user["role"] == "pat"){
-
-                  var url =
-                      "http://" + Constants.url + ":" + Constants.port + "/api/getUserById/";
-                  var body = jsonEncode({
-                    "_id": Constants.user["monmed"].toString(),
-                  });
-                  print("Body: " + body);
-                  await http
-                      .post(url, headers: {"Content-Type": "application/json"}, body: body)
-                      .then((http.Response response) {
-                    print("Response status: ${response.statusCode}");
-                    print("Response body: ${response.contentLength}");
-                    print(response.headers);
-                    print(response.request);
-                    String body = response.body;
-                    print(body);
-                    List<dynamic> parsedJson = json.decode(body);
-                    if (parsedJson != null) {
-                      var a = parsedJson[0];
-                      print(a.toString());
-                      Constants.b = a as Map<String, dynamic>;
-                      print(Constants.b["_id"]);
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => DetailPPage()));
-                    } else {
-                      print(false);
-                    }
-                  });
-                  print(Constants.user["role"]);
-                }else if (Constants.user["role"]== "med"){
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Dashboardd()));
-                  print(Constants.user["role"]);
-                }else{
-                  //wajdi@med.com
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => adminDashboardd()));
-                  print(Constants.user["role"]);
-                }
-              }else{
-                print(false);
+        print("Body: " + body);
+        await http.post(url, headers: {"Content-Type": "application/json"}, body: body).then((http.Response response) async
+          {
+            print("Response status: ${response.statusCode}");
+            print("Response body: ${response.contentLength}");
+            print(response.headers);
+            print(response.request);
+            String body = response.body;
+            print(body);
+            var parsedJson = json.decode(body);
+            if (parsedJson['success'] as bool == true)
+            {
+              Constants.user = parsedJson['user'];
+              print(true);
+              if (Constants.user["role"] == "pat")
+              {
+                var url = Constants.url + "/api/getUserById/";
+                var body = jsonEncode({"_id": Constants.user["monmed"].toString(),});
+                print("Body: " + body);
+                await http.post(url, headers: {"Content-Type": "application/json"}, body: body).then((http.Response response)
+                {
+                  print("Response status: ${response.statusCode}");
+                  print("Response body: ${response.contentLength}");
+                  print(response.headers);
+                  print(response.request);
+                  String body = response.body;
+                  print(body);
+                  List<dynamic> parsedJson = json.decode(body);
+                  if (parsedJson != null)
+                  {
+                    var a = parsedJson[0];
+                    print(a.toString());
+                    Constants.b = a as Map<String, dynamic>;
+                    print(Constants.b["_id"]);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPPage()));
+                  }else {
+                    print(false);
+                  }
+                });
+                print(Constants.user["role"]);
+              } else if (Constants.user["role"] == "med") {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboardd()));
+                print(Constants.user["role"]);
+              } else {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => adminDashboardd()));
+                print(Constants.user["role"]);
               }
-            });
+            } else {
+              print(false);
+            }
+          });
         print(userController.text.toString());
         print(passwordController.text.toString());
       },

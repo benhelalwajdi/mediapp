@@ -85,27 +85,27 @@ class _MyHomePageState extends State<HomeScreen> {
                         maxTime: DateTime(
                             this.now.year, this.now.month, this.now.day),
                         onChanged: (date) {
-                          setState(() {});
-                          print('change $date');
-                        }, onConfirm: (date) {
-                          setState(() {});
-                          print('confirm $date');
-                          birthDate = date;
-                          DateTime currentDate = DateTime.now();
-                          age = currentDate.year - birthDate.year;
-                          int month1 = currentDate.month;
-                          int month2 = birthDate.month;
-                          if (month2 > month1) {
-                            age--;
-                          } else if (month1 == month2) {
-                            int day1 = currentDate.day;
-                            int day2 = birthDate.day;
-                            if (day2 > day1) {
-                              age--;
-                            }
-                          }
-                          print('confirm $age');
-                        }, currentTime: DateTime.now(), locale: LocaleType.fr);
+                      setState(() {});
+                      print('change $date');
+                    }, onConfirm: (date) {
+                      setState(() {});
+                      print('confirm $date');
+                      birthDate = date;
+                      DateTime currentDate = DateTime.now();
+                      age = currentDate.year - birthDate.year;
+                      int month1 = currentDate.month;
+                      int month2 = birthDate.month;
+                      if (month2 > month1) {
+                        age--;
+                      } else if (month1 == month2) {
+                        int day1 = currentDate.day;
+                        int day2 = birthDate.day;
+                        if (day2 > day1) {
+                          age--;
+                        }
+                      }
+                      print('confirm $age');
+                    }, currentTime: DateTime.now(), locale: LocaleType.fr);
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -456,75 +456,72 @@ class _MyHomePageState extends State<HomeScreen> {
                 SizedBox(height: 10),
                 ButtonBar(mainAxisSize: MainAxisSize.min, children: <Widget>[
                   new RaisedButton(
-                    color: Colors.lightBlue,
-                    child: new Text('Enregistre'),
-                    onPressed: () async {
-                      print(emailController.text.toString());
-                      print(nomController.text.toString());
-                      print(prenomController.text.toString());
-                      print(usernomController.text.toString());
-                      print(phoneController.text.toString());
+                      color: Colors.lightBlue,
+                      child: new Text('Enregistre'),
+                      onPressed: () async {
+                        print(emailController.text.toString());
+                        print(nomController.text.toString());
+                        print(prenomController.text.toString());
+                        print(usernomController.text.toString());
+                        print(phoneController.text.toString());
 
-                      if (emailController.text.isEmpty) {
-                        try {
-                          _showDialog(context, "Attention",
-                              "Champ Email et vide", "fermé");
-                        } catch (error) {
-                          print(error);
+                        if (emailController.text.isEmpty) {
+                          try {
+                            _showDialog(context, "Attention",
+                                "Champ Email et vide", "fermé");
+                          } catch (error) {
+                            print(error);
+                          }
+                        } else if (nomController.text.isEmpty) {
+                          try {
+                            _showDialog(context, "Attention",
+                                "Champ Nom et vide", "fermé");
+                          } catch (error) {
+                            print(error);
+                          }
+                        } else if (prenomController.text.isEmpty) {
+                          try {
+                            _showDialog(context, "Attention",
+                                "Champ Prènom et vide", "fermé");
+                          } catch (error) {
+                            print(error);
+                          }
+                        } else if (usernomController.text.isEmpty) {
+                          try {
+                            _showDialog(context, "Attention",
+                                "Champ username et vide", "fermé");
+                          } catch (error) {
+                            print(error);
+                          }
+                        } else if (phoneController.text.isEmpty) {
+                          try {
+                            _showDialog(context, "Attention",
+                                "Champ Telephone et vide", "fermé");
+                          } catch (error) {
+                            print(error);
+                          }
+                        } else if (phoneController.text.isNotEmpty) {
+                          try {
+                            int.parse(phoneController.text);
+                          } catch (error) {
+                            _showDialog(
+                                context,
+                                "Attention",
+                                "vous ne pouvez pas enregistre un numero telephone avec des caractaire.\n ex : 00 216 23123414",
+                                "fermé");
+                          }
                         }
-                      } else if (nomController.text.isEmpty) {
-                        try {
-                          _showDialog(context, "Attention", "Champ Nom et vide",
-                              "fermé");
-                        } catch (error) {
-                          print(error);
-                        }
-                      } else if (prenomController.text.isEmpty) {
-                        try {
-                          _showDialog(context, "Attention",
-                              "Champ Prènom et vide", "fermé");
-                        } catch (error) {
-                          print(error);
-                        }
-                      } else if (usernomController.text.isEmpty) {
-                        try {
-                          _showDialog(context, "Attention",
-                              "Champ username et vide", "fermé");
-                        } catch (error) {
-                          print(error);
-                        }
-                      } else if (phoneController.text.isEmpty) {
-                        try {
-                          _showDialog(context, "Attention",
-                              "Champ Telephone et vide", "fermé");
-                        } catch (error) {
-                          print(error);
-                        }
-                      } else if (phoneController.text.isNotEmpty) {
-                        try {
-                          var decimal = int.parse(phoneController.text);
-                        } catch (error) {
-                          _showDialog(
-                              context,
-                              "Attention",
-                              "vous ne pouvez pas enregistre un numero telephone avec des caractaire.\n ex : 00 216 23123414",
-                              "fermé");
-                        }
-                      } else {
+
                         print(birthDate.toString());
                         print(Constants.list_malade.toString());
                         print(Constants.list_medica.toString());
                         print(Constants.list_jour.toString());
-                        var url = "http://" +
-                            Constants.url +
-                            ":" +
-                            Constants.port +
-                            "/api/adduser";
+                        var url = Constants.url + "/api/adduser";
                         var body = jsonEncode({
                           "email": emailController.text,
                           "name":
-                          nomController.text + " " + prenomController.text,
-                          "password": "w",
+                              nomController.text + " " + prenomController.text,
+                          "password": "1234",
                           "role": "pat",
                           "address": "w",
                           "tel": phoneController.text,
@@ -540,8 +537,8 @@ class _MyHomePageState extends State<HomeScreen> {
                         try {
                           await http
                               .post(url,
-                              headers: {"Content-Type": "application/json"},
-                              body: body)
+                                  headers: {"Content-Type": "application/json"},
+                                  body: body)
                               .then((http.Response response) async {
                             print("Response status: ${response.statusCode}");
                             print("Response body: ${response.contentLength}");
@@ -553,12 +550,12 @@ class _MyHomePageState extends State<HomeScreen> {
                             if (parsedJson['success'] as bool == true) {
                               print(true);
                               Map<String, dynamic> parsedJson =
-                              json.decode(body);
+                                  json.decode(body);
                               print(parsedJson["success"].toString());
                               for (int i = 0; i < 1; i++) {
                                 print(i);
                                 Map<String, dynamic> listRates =
-                                parsedJson["msg"];
+                                    parsedJson["msg"];
                                 print(listRates["_id"].toString());
                                 var body = jsonEncode({
                                   "user": listRates["_id"].toString(),
@@ -566,17 +563,13 @@ class _MyHomePageState extends State<HomeScreen> {
                                   "type": Constants.list_malade,
                                   "his": "true"
                                 });
-                                var url = "http://" +
-                                    Constants.url +
-                                    ":" +
-                                    Constants.port +
-                                    "/api/fich/addfich";
+                                var url = Constants.url + "/api/fich/addfich";
                                 await http
                                     .post(url,
-                                    headers: {
-                                      "Content-Type": "application/json"
-                                    },
-                                    body: body)
+                                        headers: {
+                                          "Content-Type": "application/json"
+                                        },
+                                        body: body)
                                     .then((http.Response response) {
                                   print(
                                       "Response status: ${response.statusCode}");
@@ -591,28 +584,20 @@ class _MyHomePageState extends State<HomeScreen> {
                                     print(true);
                                   }
                                 });
-                                /*
-                            var a = json.decode(listRates[i]);
-                            print(a["_id"]);
-                            */
                               }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Dashboardd()),
+                              );
                             } else {
                               print(false);
                             }
                           });
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Dashboardd()),
-                          );
                         } catch (error) {
-                          print("When you add new user and new fich : " +
-                              error.toString());
+                          print(error);
                         }
-                      }
-                    },
-                  ),
+                      }),
                   new RaisedButton(
                     color: Colors.lightBlueAccent,
                     child: new Text('Reset'),

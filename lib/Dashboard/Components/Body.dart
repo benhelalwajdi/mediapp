@@ -26,10 +26,7 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
   GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
   AutoCompleteTextField searchTextField;
   TextEditingController econtroller = new TextEditingController();
-
-  void _loadDataRate(id) async {
-    await RatesViewModel.loadPlayers(id);
-  }
+  int numberPat = 0 ;
 
   @override
   void initState() {
@@ -41,6 +38,13 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
 
     RatesViewModel.Listrates = [];
     _loadData();
+
+    if (UserViewModel.user != null ){
+      setState(() {
+        numberPat = UserViewModel.user.length;
+      });
+    }
+
     super.initState();
   }
 
@@ -200,7 +204,7 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
                         );
                       },
                       shrinkWrap: true,
-                      itemCount: 4),
+                      itemCount: numberPat),
                 ],
               ),
             ),

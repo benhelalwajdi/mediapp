@@ -6,6 +6,8 @@ import 'package:mediapp/screens/detail_screen.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
+import '../../detail_all.dart';
+import '../../detail_med.dart';
 import '../ListMed.dart';
 import 'Background.dart';
 
@@ -26,10 +28,6 @@ class body extends State<ListMed> with SingleTickerProviderStateMixin {
   GlobalKey<AutoCompleteTextFieldState<User>> key = new GlobalKey();
   AutoCompleteTextField searchTextField;
   TextEditingController econtroller = new TextEditingController();
-
-  void _loadDataRate(id) async {
-    await RatesViewModel.loadPlayers(id);
-  }
 
   @override
   void initState() {
@@ -58,10 +56,10 @@ class body extends State<ListMed> with SingleTickerProviderStateMixin {
   }
 var size = 0 ;
   void _loadData() async {
-    await UserViewModel.loadPlayers();
+    await MedViewModel.loadPlayers();
     try{
       setState(() {
-        size = UserViewModel.user.length;
+        size = MedViewModel.user.length;
       });
     }catch(error){
       size = 0;
@@ -137,7 +135,7 @@ var size = 0 ;
                               contentPadding:
                                   EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
                               filled: true,
-                              hintText: 'Recherche Patient par Nom :',
+                              hintText: 'Recherche Medicien par Nom :',
                               hintStyle: TextStyle(color: Colors.black)),
                           itemSubmitted: (item) {
                             print(item.id.toString());
@@ -156,13 +154,13 @@ var size = 0 ;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DetailPage(item)),
+                                    builder: (context) => Detailmed(item)),
                               );
                             }
                           },
                           clearOnSubmit: false,
                           key: key,
-                          suggestions: UserViewModel.user,
+                          suggestions: MedViewModel.user,
                           itemBuilder: (context, item) {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,17 +189,17 @@ var size = 0 ;
                       itemBuilder: (context, index) {
                         return ProductCard(
                           itemIndex: index,
-                          user: UserViewModel.user[index],
+                          user: MedViewModel.user[index],
                           press: (){
                             try {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        DetailPage(UserViewModel.user[index])),
+                                        Detailmed(MedViewModel.user[index])),
                               );
                             } catch (error) {
-                              print("list patiant : "+error);
+                              print("list Med : "+error);
                             }
                           },
                         );

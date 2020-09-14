@@ -8,8 +8,8 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:http/http.dart' as http;
 
 void main() => runApp(MaterialApp(
-      home: DetailPPage(),
-    ));
+  home: DetailPPage(),
+));
 
 class DetailPPage extends StatefulWidget {
   @override
@@ -72,11 +72,7 @@ class DetailScreen extends State<DetailPPage> {
       childBtn = InkWell(
         onTap: () {
           setState(() {
-            var url = "http://" +
-                Constants.url +
-                ":" +
-                Constants.port +
-                "/api/rates/addRates/";
+            var url = Constants.url + "/api/rates/addRates/";
 
             listmed = Constants.user["medicaments"];
             for (int i = 0; i < listmed.length; i++) {
@@ -119,7 +115,7 @@ class DetailScreen extends State<DetailPPage> {
               print("Body: " + body);
               http
                   .post(url,
-                      headers: {"Content-Type": "application/json"}, body: body)
+                  headers: {"Content-Type": "application/json"}, body: body)
                   .then((http.Response response) {
                 print("Response status: ${response.statusCode}");
                 print("Response body: ${response.contentLength}");
@@ -189,7 +185,9 @@ class DetailScreen extends State<DetailPPage> {
     }
 
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return Scaffold(
+    return new WillPopScope(
+        onWillPop: _onWillPop,
+        child: new Scaffold(
         backgroundColor: Constants.backgroundColor,
         body: Stack(children: <Widget>[
           ClipPath(
@@ -213,18 +211,18 @@ class DetailScreen extends State<DetailPPage> {
           Padding(
               padding: EdgeInsets.all(Constants.paddingSide),
               child:
-                  ListView(scrollDirection: Axis.vertical, children: <Widget>[
+              ListView(scrollDirection: Axis.vertical, children: <Widget>[
                 Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       SizedBox(
                         width: 34,
                         child: RawMaterialButton(
                           materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          MaterialTapTargetSize.shrinkWrap,
                           onPressed: () {
-                            Navigator.pop(context);
+                            _onWillPop();
                           },
                           child: Icon(Icons.arrow_back_ios,
                               size: 15.0, color: Colors.white),
@@ -234,6 +232,18 @@ class DetailScreen extends State<DetailPPage> {
                                 width: 2,
                                 style: BorderStyle.solid),
                           ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 34,
+                        child: RawMaterialButton(
+                          materialTapTargetSize:
+                          MaterialTapTargetSize.shrinkWrap,
+                          onPressed: () {
+
+                          },
+                          child: Icon(Icons.account_circle,
+                              size: 40.0, color: Colors.white),
                         ),
                       ),
                     ]),
@@ -284,7 +294,29 @@ class DetailScreen extends State<DetailPPage> {
                 child,
                 childBtn,
               ]))
-        ]));
+        ])
+        )
+    );
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Vous étes sur ?'),
+        content: new Text('Voulez-vous quitter une application ?'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('Non'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Oui'),
+          ),
+        ],
+      ),
+    )) ?? false;
   }
 
   @override

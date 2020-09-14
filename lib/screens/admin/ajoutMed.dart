@@ -136,10 +136,8 @@ class _MyHomePageState extends State<ajoutMed> {
                               "vous ne pouvez pas enregistre un numero telephone avec des caractaire.\n ex : 00 216 23123414",
                               "fermé");
                         }
-                        var url = "http://" +
+                        var url =
                             Constants.url +
-                            ":" +
-                            Constants.port +
                             "/api/adduser";
                         print("object");
                         var body = jsonEncode({
@@ -171,15 +169,15 @@ class _MyHomePageState extends State<ajoutMed> {
                               Map<String, dynamic> parsedJson =
                                   json.decode(body);
                               print(parsedJson["success"].toString());
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => adminDashboardd()),
+                              );
                             } else {
                               print("ajout medicien" + false.toString());
                             }
                           });
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => adminDashboardd()),
-                          );
                         } catch (error) {
                           print("When you add new Med : " + error.toString());
                         }

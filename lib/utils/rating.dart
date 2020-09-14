@@ -54,10 +54,8 @@ class RatesViewModel {
   static String idPat;
 
   static Future loadPlayers(idPat) async {
-    var url = "http://" +
+    var url =
         Constants.url +
-        ":" +
-        Constants.port +
         "/api/rates/ratesByUser/" +
         idPat.toString();
     try {

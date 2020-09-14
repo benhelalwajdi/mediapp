@@ -42,13 +42,13 @@ class _LoginPageState extends State<LoginPage> {
                     emailPasswordWidget(user_Controller,password_Controller),
                     SizedBox(height: 20),
                     submitButton(context,user_Controller,password_Controller),
-                    Container(
+                    /*Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       alignment: Alignment.centerRight,
                       child: Text('Oublier Mots de passe ?',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w900)),
-                    ),
+                    ),*/
                   //_divider(),
                   //_facebookButton(),
                   SizedBox(height: height * .055),

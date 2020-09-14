@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mediapp/screens/GraphProduits.dart';
+import 'package:mediapp/screens/med/GraphProduits.dart';
 import 'package:mediapp/screens/admin/ListMed/ListMed.dart';
 import 'package:mediapp/screens/admin/detail_all.dart';
 import 'package:mediapp/screens/loginPage.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediapp/screens/admin/adminDashboard.dart';
-import 'package:mediapp/screens/dashboardd.dart';
+import 'package:mediapp/screens/med/dashboardd.dart';
 import 'package:mediapp/screens/patient/patient_screen.dart';
 
 class Constants {

@@ -1,8 +1,8 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediapp/Dashboard/Components/product_card.dart';
-import 'package:mediapp/screens/detail_screen.dart';
+import 'package:mediapp/screens/med/Dashboard/Components/product_card.dart';
+import 'package:mediapp/screens/med/detail_screen.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';

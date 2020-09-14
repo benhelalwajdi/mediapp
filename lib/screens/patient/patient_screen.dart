@@ -7,6 +7,8 @@ import 'package:mediapp/widgets/custom_clipper.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:http/http.dart' as http;
 
+import 'change_password.dart';
+
 void main() => runApp(MaterialApp(
   home: DetailPPage(),
 ));
@@ -240,7 +242,7 @@ class DetailScreen extends State<DetailPPage> {
                           materialTapTargetSize:
                           MaterialTapTargetSize.shrinkWrap,
                           onPressed: () {
-
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => newPassword()));
                           },
                           child: Icon(Icons.account_circle,
                               size: 40.0, color: Colors.white),

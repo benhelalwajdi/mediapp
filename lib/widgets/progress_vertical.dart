@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediapp/screens/detail_screen.dart';
+import 'package:mediapp/screens/med/detail_screen.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/widgets/custom_clipper.dart';
 

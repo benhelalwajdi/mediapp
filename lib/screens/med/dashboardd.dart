@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mediapp/Dashboard/Dashboard.dart';
-import 'package:mediapp/screens/GraphProduits.dart';
-import 'package:mediapp/screens/newUser_screen.dart';
+import 'package:mediapp/screens/med/Dashboard/Dashboard.dart';
+import 'package:mediapp/screens/med/GraphProduits.dart';
+import 'package:mediapp/screens/med/newUser_screen.dart';
 import 'package:mediapp/screens/loginPage.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/user.dart';
-
 class Dashboardd extends StatefulWidget {
   @override
   Dashboarddd createState() => new Dashboarddd();

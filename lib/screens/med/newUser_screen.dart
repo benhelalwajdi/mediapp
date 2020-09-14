@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:mediapp/screens/dashboardd.dart';
+import 'package:mediapp/screens/med/dashboardd.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/widgets/card_eval.dart';
 import 'package:mediapp/widgets/card_malade.dart';

@@ -2,14 +2,11 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mediapp/Dashboard/Components/product_card.dart';
-import 'package:mediapp/screens/detail_screen.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
-import '../../detail_all.dart';
 import '../../detail_med.dart';
 import '../ListMed.dart';
-import 'Background.dart';
 
 // ignore: camel_case_types
 class body extends State<ListMed> with SingleTickerProviderStateMixin {
@@ -75,7 +72,6 @@ var size = 0 ;
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          menu(context, slideAnimation, menuScaleAnimation),
           dashboard(context),
         ],
       ),

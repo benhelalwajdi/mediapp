@@ -7,7 +7,6 @@ import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
 import '../Dashboard.dart';
-import 'Background.dart';
 
 // ignore: camel_case_types
 class body extends State<Dashboard> with SingleTickerProviderStateMixin {
@@ -74,7 +73,6 @@ class body extends State<Dashboard> with SingleTickerProviderStateMixin {
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          menu(context, slideAnimation, menuScaleAnimation),
           dashboard(context),
         ],
       ),

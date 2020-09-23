@@ -52,11 +52,6 @@ class DetailScreen extends State<DetailPage> {
 
   @override
   initState() {
-    /*_loadData().then((bool value) {
-      // future is completed you can perform your task
-      print("loadData initState " + value.toString());
-      isNull = false;
-    });*/
     loadPlayers(user.id);
     print(user.name.toString());
     for (int i = 0; i < user.type.length; i++) {
@@ -78,18 +73,6 @@ class DetailScreen extends State<DetailPage> {
     RatesViewModel.idPat = user.id;
     super.initState();
   }
-
-  // ignore: missing_return
-  /*Future<bool> _loadData() async {
-    await RatesViewModel.loadPlayers(user.id);
-    if (RatesViewModel.Listrates.isEmpty) {
-      print("it's so bad is Null");
-      isNull = true;
-    } else {
-      isNull = false;
-    }
-    print(isNull.toString() + "in _loadData");
-  }*/
 
   @override
   Widget build(BuildContext context) {

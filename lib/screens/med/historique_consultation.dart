@@ -9,9 +9,9 @@ import 'package:mediapp/screens/patient/theme/theme.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/user.dart';
 
-
 class RecomendedPage extends StatefulWidget {
-  User user ;
+  User user;
+
   RecomendedPage(this.user);
 
   @override
@@ -23,8 +23,10 @@ bool listIsEmpty;
 
 class _RecomendedPage extends State<RecomendedPage> {
   double width;
-  User user ;
-  _RecomendedPage (this.user);
+  User user;
+
+  _RecomendedPage(this.user);
+
   @override
   initState() {
     //print(list.length);
@@ -58,8 +60,7 @@ class _RecomendedPage extends State<RecomendedPage> {
   }
 
   Future<void> _loadRatingHistory() async {
-    var url = Constants.url +
-        "/api/fich/fichByUser/" + user.id.toString();
+    var url = Constants.url + "/api/fich/fichByUser/" + user.id.toString();
     await http.get(url, headers: {"Content-Type": "application/json"}).then(
         (http.Response response) async {
       String body = response.body;
@@ -73,69 +74,69 @@ class _RecomendedPage extends State<RecomendedPage> {
           String typeText = "";
           String medText = "";
           for (int i = 0; i < d.length; i++) {
-            if(d[i]["his"] == false ){
-            List<dynamic> type = d[i]["type"];
-            for (int j = 0; j < type.length; j++) {
-              typeText = typeText + " " + type[j].toString();
-              print(typeText);
-            }
-            List<dynamic> med = d[i]["medicaments"];
-            for (int j = 0; j < med.length; j++) {
-              medText = medText + " " + med[j].toString();
-              print(medText);
-            }
-            print(d[d.length - 1]["createdAt"]);
-            if (list == null) {
-              list[0] = new CourseModel(
-                  name: "Consultation le : " +
-                      DateTime.parse(user.createdAt.toString())
-                          .day
-                          .toString() +
-                      "/" +
-                      DateTime.parse(user.createdAt.toString())
-                          .month
-                          .toString() +
-                      "/" +
-                      DateTime.parse(user.createdAt.toString())
-                          .year
-                          .toString(),
-                  description: "Information de la consultation  : " + typeText,
-                  noOfCource: "",
-                  university: user.evaluation.toString(),
-                  tag1: medText);
-              setState(() {
-                listIsEmpty = false;
-              });
+            if (d[i]["his"] == false) {
+              List<dynamic> type = d[i]["type"];
+              for (int j = 0; j < type.length; j++) {
+                typeText = typeText + " " + type[j].toString();
+                print(typeText);
+              }
+              List<dynamic> med = d[i]["medicaments"];
+              for (int j = 0; j < med.length; j++) {
+                medText = medText + " " + med[j].toString();
+                print(medText);
+              }
+              print(d[d.length - 1]["createdAt"]);
+              if (list == null) {
+                list[0] = new CourseModel(
+                    name: "Consultation le : " +
+                        DateTime.parse(user.createdAt.toString())
+                            .day
+                            .toString() +
+                        "/" +
+                        DateTime.parse(user.createdAt.toString())
+                            .month
+                            .toString() +
+                        "/" +
+                        DateTime.parse(user.createdAt.toString())
+                            .year
+                            .toString(),
+                    description:
+                        "Information de la consultation  : " + typeText,
+                    noOfCource: "",
+                    university: user.evaluation.toString(),
+                    tag1: medText);
+                setState(() {
+                  listIsEmpty = false;
+                });
+              } else {
+                list.add(new CourseModel(
+                    name: "Consultation le : " +
+                        DateTime.parse(user.createdAt.toString())
+                            .day
+                            .toString() +
+                        "/" +
+                        DateTime.parse(user.createdAt.toString())
+                            .month
+                            .toString() +
+                        "/" +
+                        DateTime.parse(user.createdAt.toString())
+                            .year
+                            .toString(),
+                    description:
+                        "Information de la consultation : \n cas général\n"
+                                "Motif : " +
+                            typeText,
+                    noOfCource: Constants.user["evaluation"].toString(),
+                    university: "Dr Mohamed Haded",
+                    tag1: "Lactose Nigelle : " + medText));
+                setState(() {
+                  listIsEmpty = false;
+                });
+              }
+              var birthday = DateTime.parse(d[d.length - 1]["createdAt"].toString());
+              var date2 = DateTime.now();
             } else {
-              list.add(new CourseModel(
-                  name: "Consultation le : " +
-                      DateTime.parse(user.createdAt.toString())
-                          .day
-                          .toString() +
-                      "/" +
-                      DateTime.parse(user.createdAt.toString())
-                          .month
-                          .toString() +
-                      "/" +
-                      DateTime.parse(user.createdAt.toString())
-                          .year
-                          .toString(),
-                  description:
-                      "Information de la consultation : \n cas général\n"
-                              "Motif : " +
-                          typeText,
-                  noOfCource: Constants.user["evaluation"].toString(),
-                  university: "Dr Mohamed Haded",
-                  tag1: "Lactose Nigelle : " + medText));
-              setState(() {
-                listIsEmpty = false;
-              });
-            }
-            var birthday =
-                DateTime.parse(d[d.length - 1]["createdAt"].toString());
-            var date2 = DateTime.now();
-          }else {
-              print(" it's not classified :D");
+              print("it's not classified :D");
             }
           }
         }

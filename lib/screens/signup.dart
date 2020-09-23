@@ -14,6 +14,8 @@ class SignUpPage extends StatefulWidget {
   _SignUpPageState createState() => _SignUpPageState();
 }
 
+
+
 class _SignUpPageState extends State<SignUpPage> {
   Widget _backButton() {
     return InkWell(

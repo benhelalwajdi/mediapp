@@ -3,6 +3,8 @@ import 'dart:ffi';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mediapp/screens/med/historique_consultation.dart';
+import 'package:mediapp/screens/med/newFich.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/utils/rating.dart';
 import 'package:mediapp/utils/user.dart';
@@ -144,12 +146,43 @@ class DetailScreen extends State<DetailPage> {
                       ),
                     ),
                     Spacer(),
-                    Image(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/icons/heartbeatthin.png'),
-                        height: 73,
-                        width: 80,
-                        color: Colors.white.withOpacity(1)),
+                    SizedBox(
+                      width: 34,
+                      child: RawMaterialButton(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => RecomendedPage(user)));
+                        },
+                        child: Icon(Icons.list,
+                            size: 15.0, color: Colors.white),
+                        shape: CircleBorder(
+                          side: BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    SizedBox(
+                      width: 34,
+                      child: RawMaterialButton(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => newFich(user)));
+                        },
+                        child: Icon(Icons.add,
+                            size: 15.0, color: Colors.white),
+                        shape: CircleBorder(
+                          side: BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 Text(

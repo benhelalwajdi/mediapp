@@ -31,6 +31,8 @@ dependencies:
   autocomplete_textfield: ^1.6.4
   shared_preferences: ^0.5.10
   smooth_star_rating: 1.1.1
+  charts_flutter: ^0.6.0
+  font_awesome_flutter: ^8.2.0
 
 dev_dependencies:
   flutter_test:

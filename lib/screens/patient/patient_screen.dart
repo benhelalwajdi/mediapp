@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mediapp/screens/loginPage.dart';
+import 'package:mediapp/screens/patient/historique.dart';
+import 'package:mediapp/screens/patient/historique_consultation.dart';
 import 'package:mediapp/utils/const.dart';
 import 'package:mediapp/widgets/custom_clipper.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -30,6 +33,7 @@ class DetailScreen extends State<DetailPPage> {
   var malade = "";
   List<dynamic> listmed;
   List<dynamic> listIdMed = [" "];
+  var display = false;
 
   @override
   initState() {
@@ -46,7 +50,6 @@ class DetailScreen extends State<DetailPPage> {
       print(listmed[i].toString());
       medicament = medicament + " " + listmed[i].toString();
     }
-
     super.initState();
   }
 
@@ -164,7 +167,10 @@ class DetailScreen extends State<DetailPPage> {
             fontSize: 25, fontWeight: FontWeight.w900, color: Colors.white),
       );
       childBtn = InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => historique()));
+        },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 20),
           padding: EdgeInsets.all(15),
@@ -224,9 +230,14 @@ class DetailScreen extends State<DetailPPage> {
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   onPressed: () {
-                                    _onWillPop();
+                                    print("object");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RecomendedPage()));
                                   },
-                                  child: Icon(Icons.arrow_back_ios,
+                                  child: Icon(Icons.list,
                                       size: 15.0, color: Colors.white),
                                   shape: CircleBorder(
                                     side: BorderSide(
@@ -317,7 +328,8 @@ class DetailScreen extends State<DetailPPage> {
                 child: new Text('Non'),
               ),
               new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginPage())),
                 child: new Text('Oui'),
               ),
             ],
@@ -325,8 +337,6 @@ class DetailScreen extends State<DetailPPage> {
         )) ??
         false;
   }
-
-  var display = false;
 
   Future<void> _loadRatingHistory() async {
     var url = Constants.url +
@@ -339,7 +349,7 @@ class DetailScreen extends State<DetailPPage> {
       var parsedJson = json.decode(body);
       if (parsedJson['success'] as bool == true) {
         if (parsedJson['rates'] == null) {
-          ratingBol = true ;
+          ratingBol = true;
         } else {
           List<dynamic> d = parsedJson['rates'];
           print(d[d.length - 1]);
@@ -351,25 +361,25 @@ class DetailScreen extends State<DetailPPage> {
           if (Constants.user["evaluation"] == "1*/Jour") {
             var difference = date2.difference(birthday).inHours;
             print(difference.toString());
-            if(difference < 24){
+            if (difference < 24) {
               setState(() {
-                ratingBol = true ;
+                ratingBol = true;
               });
             }
-          }else if (Constants.user["evaluation"] == "1*/Semaine"){
+          } else if (Constants.user["evaluation"] == "1*/Semaine") {
             var difference = date2.difference(birthday).inDays;
             print(difference.toString());
-            if(difference < 7){
+            if (difference < 7) {
               setState(() {
-                ratingBol = true ;
+                ratingBol = true;
               });
             }
-          }else if (Constants.user["evaluation"] == "1*/Mois"){
+          } else if (Constants.user["evaluation"] == "1*/Mois") {
             var difference = date2.difference(birthday).inDays;
             print(difference.toString());
-            if(difference < 7){
+            if (difference < 7) {
               setState(() {
-                ratingBol = true ;
+                ratingBol = true;
               });
             }
           }
@@ -380,7 +390,6 @@ class DetailScreen extends State<DetailPPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 }

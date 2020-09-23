@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mediapp/screens/admin/chartpathologie.dart';
+import 'package:mediapp/screens/admin/chartporduit.dart';
 import 'package:mediapp/screens/med/GraphProduits.dart';
 import 'package:mediapp/screens/admin/ListMed/ListMed.dart';
 import 'package:mediapp/screens/admin/detail_all.dart';
 import 'package:mediapp/screens/loginPage.dart';
+import 'package:mediapp/screens/patient/change_password.dart';
 import 'package:mediapp/utils/const.dart';
 
 import 'ajoutMed.dart';
@@ -60,7 +63,8 @@ class Dashboarddd extends State<adminDashboardd> {
             child: new Text('Non'),
           ),
           new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => LoginPage())),
             child: new Text('Oui'),
           ),
         ],
@@ -87,6 +91,24 @@ class Dashboarddd extends State<adminDashboardd> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        SizedBox(
+                          width: 34,
+                          child: RawMaterialButton(
+                            materialTapTargetSize:
+                            MaterialTapTargetSize.shrinkWrap,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          newPassword()));
+                            },
+                            child: Icon(Icons.account_circle,
+                                size: 40.0, color: Colors.black),
+                          ),
+                        ), SizedBox(
+                          height: 4,
+                        ),
                         Text(
                           Constants.user["name"],
                           style: GoogleFonts.openSans(
@@ -97,6 +119,22 @@ class Dashboarddd extends State<adminDashboardd> {
                         ),
                         SizedBox(
                           height: 4,
+                        ),
+                        SizedBox(
+                          width: 34,
+                          child: RawMaterialButton(
+                            materialTapTargetSize:
+                            MaterialTapTargetSize.shrinkWrap,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          newPassword()));
+                            },
+                            child: Icon(Icons.account_circle,
+                                size: 40.0, color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -151,7 +189,7 @@ class GridDashboard extends StatelessWidget {
       title: "Aperçu",
       img: "assets/icons/graph.png",
     );
-    List<Items> myList = [item1, item2, item3, item4, item5, item6, item7];
+    List<Items> myList = [item1, item2, item3, item4/*, item5, item6*/, item7];
     return Flexible(
         child: GridView.count(
             childAspectRatio: 1.0,
@@ -213,14 +251,14 @@ void _onTileClicked(BuildContext context, int index) {
   } else if (index == 3) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GraphProduits()),
+      MaterialPageRoute(builder: (context) => chartproduit()),
     );
   } else if (index == 4) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => chartpathologie()),
     );
-  } else if (index == 5) {
+  }  /*else if (index == 5) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
@@ -229,8 +267,8 @@ void _onTileClicked(BuildContext context, int index) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
-    );}
-    else if (index == 6) {
+    );}*/
+    else if (index == 7) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Detailall()),

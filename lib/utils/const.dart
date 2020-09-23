@@ -11,10 +11,11 @@ class Constants {
   // Name
   static String appName = "Rhinestone";
 
+  static List<String> list_malade = [""];
 
-  static List<String> list_malade = [""] ;
-  static List<String> list_medica = [""] ;
-  static List<String> list_jour = [""] ;
+  static List<String> list_medica = [""];
+
+  static List<String> list_jour = [""];
 
   static Map<String, dynamic> b;
 
@@ -67,7 +68,7 @@ class Constants {
   // Orange
   static Color darkOrange = Color(0xFFFFB74D);
 
-  static var user ;
+  static var user;
 
   static ThemeData lighTheme(BuildContext context) {
     return ThemeData(
@@ -88,7 +89,6 @@ class Constants {
 
   static double headerHeight = 228.5;
   static double paddingSide = 30.0;
-
 }
 
 Widget backButton(context) {
@@ -114,8 +114,8 @@ Widget backButton(context) {
 
 Widget entryField(String title, TextEditingController controller,
     {bool isPassword = false}) {
-  var hint = title ;
-  if (title == "Telephone"){
+  var hint = title;
+  if (title == "Telephone") {
     hint = "ex: 00 216 208 300 300";
   }
   return Container(
@@ -152,70 +152,94 @@ Widget emailPasswordWidget(TextEditingController userController,
     ],
   );
 }
+
 Widget submitButton(context, TextEditingController userController,
     TextEditingController passwordController) {
   return InkWell(
       onTap: () async {
-        var url = Constants.url +
-            "/api/authenticate";
+        var url = Constants.url + "/api/authenticate";
         var body = jsonEncode({
           "username": userController.text.toString(),
           "password": passwordController.text.toString()
         });
         print("Body: " + body);
-        print("Body: " + body);
-        await http.post(url, headers: {"Content-Type": "application/json"}, body: body).then((http.Response response) async
-          {
-            print("Response status: ${response.statusCode}");
-            print("Response body: ${response.contentLength}");
-            print(response.headers);
-            print(response.request);
+        await Future.delayed(const Duration(seconds: 1), () => "1");
+        print("Body2: " + body);
+        if (userController.text.toString().isEmpty) {
+          _showDialog(context, "Login", "Champs Username est vide", "Confirme");
+        } else if (passwordController.text.toString().isEmpty) {
+          _showDialog(context, "Login", "Champs password est vide", "Confirme");
+        } else {
+          await http
+              .post(url,
+                  headers: {"Content-Type": "application/json"}, body: body)
+              .then((http.Response response) async {
+            print("Response status : ${response.statusCode}");
+            print("Response contentLength : ${response.contentLength}");
+            print("Response headers : ${response.headers}");
+            print("Response request :${response.request}");
+            print("Response body : ${response.body}");
+
             String body = response.body;
-            print(body);
             var parsedJson = json.decode(body);
-            if (parsedJson['success'] as bool == true)
-            {
+            if (parsedJson['success'] as bool == true) {
               Constants.user = parsedJson['user'];
               print(true);
-              if (Constants.user["role"] == "pat")
-              {
+              if (Constants.user["role"] == "pat") {
                 var url = Constants.url + "/api/getUserById/";
-                var body = jsonEncode({"_id": Constants.user["monmed"].toString(),});
-                print("Body: " + body);
-                await http.post(url, headers: {"Content-Type": "application/json"}, body: body).then((http.Response response)
-                {
-                  print("Response status: ${response.statusCode}");
-                  print("Response body: ${response.contentLength}");
-                  print(response.headers);
-                  print(response.request);
+                var body = jsonEncode({
+                  "_id": Constants.user["monmed"].toString(),
+                });
+                await http
+                    .post(url,
+                        headers: {"Content-Type": "application/json"},
+                        body: body)
+                    .then((http.Response response) {
+                  print("Response status : ${response.statusCode}");
+                  print("Response contentLength : ${response.contentLength}");
+                  print("Response headers : ${response.headers}");
+                  print("Response request :${response.request}");
+                  print("Response body : ${response.body}");
+
                   String body = response.body;
-                  print(body);
                   List<dynamic> parsedJson = json.decode(body);
-                  if (parsedJson != null)
-                  {
+                  if (parsedJson != null) {
                     var a = parsedJson[0];
                     print(a.toString());
                     Constants.b = a as Map<String, dynamic>;
                     print(Constants.b["_id"]);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPPage()));
-                  }else {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => DetailPPage()));
+                  } else {
                     print(false);
                   }
                 });
                 print(Constants.user["role"]);
               } else if (Constants.user["role"] == "med") {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboardd()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Dashboardd()));
                 print(Constants.user["role"]);
-              } else {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => adminDashboardd()));
+              } else if (Constants.user["role"] == "Admin") {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => adminDashboardd()));
                 print(Constants.user["role"]);
               }
             } else {
               print(false);
+
+              String body = response.body;
+              var parsedJson = json.decode(body);
+              // ignore: unrelated_type_equality_checks
+              if (parsedJson['msg'].toString().compareTo("Authentication failed, wrong password") == true){
+                _showDialog(context, "Login", "mots de passe incorrect", "Confirme");
+              }else {
+                _showDialog(context, "Login", "Utilisateur non trouvé", "Confirme");
+              }
             }
           });
-        print(userController.text.toString());
-        print(passwordController.text.toString());
+          print(userController.text.toString());
+          print(passwordController.text.toString());
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -239,7 +263,29 @@ Widget submitButton(context, TextEditingController userController,
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ));
-  //}
+}
+
+void _showDialog(context, titre, content, btnText) {
+  // flutter defined function
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: new Text(titre),
+        content: new Text(content),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            child: new Text(btnText),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 Widget createAccountLabel(context) {

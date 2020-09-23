@@ -18,6 +18,7 @@ class User {
   List<dynamic> type;
   List<dynamic> medicaments;
   var code;
+  var evaluation ;
 
   User({
     this.id,
@@ -33,6 +34,7 @@ class User {
     this.type,
     this.medicaments,
     this.code,
+    this.evaluation,
     this.createdAt,
   });
 
@@ -52,6 +54,7 @@ class User {
       medicaments: parsedJson['medicaments'],
       code: parsedJson['code'],
       createdAt: parsedJson['createdAt'],
+      evaluation: parsedJson['evaluation'],
     );
   }
 }
